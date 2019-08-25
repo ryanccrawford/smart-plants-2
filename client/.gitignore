@@ -347,12 +347,7 @@ ASALocalRun/
 .env.development.local
 .env.test.local
 .env.production.local
-.env
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-smart-plants-2-8086bb5fb788.json
-
-config/config.js
