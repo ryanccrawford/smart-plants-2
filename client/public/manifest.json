@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SmartPlants",
+  "name": "SmartPlants 2 Plant Monitoring System",
   "icons": [
     {
       "src": "favicon.ico",
