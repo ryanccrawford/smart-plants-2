@@ -4,6 +4,7 @@ const apiKey = process.env.PLANT_API_KEY;
 const multer = require('multer');
 const upload = multer({ dest: __dirname + '/uploads/images' });
 const vision = require('@google-cloud/vision');
+const path = require('path');
 
 
 module.exports = function (app) {
@@ -79,7 +80,7 @@ module.exports = function (app) {
                 return descriptions;
             };
 
-            const imagePath = './routes/uploads/images/' + imageFilePath.filename;
+            const imagePath = './routes/uploads/images/' + image.filename;
             detectImage(imagePath).then(descriptions => {
                 
                 res.json({ image: imagePath, labels: descriptions });
@@ -93,15 +94,14 @@ module.exports = function (app) {
 
     });
 
+
+    app.get("/routes/uploads/images/:name", (req, res) => {
+        let fname = req.params.name;
+        res.sendFile(path.join(__dirname, "./routes/uploads/images/" + fname));
+    });
+
     app.get("*", (req, res) => {
         res.sendFile(path.join(__dirname, "../../client/build/index.html"));
     });
 
 };
-
-
-
-
-
-
-
