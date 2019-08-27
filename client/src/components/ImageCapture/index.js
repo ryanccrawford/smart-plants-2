@@ -20,7 +20,7 @@ class ImageCapture extends Component {
 
         event.preventDefault();
         const formData = new FormData();
-       
+
         formData.append('image', this.state.file);
         const config = {
             headers: {
@@ -33,27 +33,17 @@ class ImageCapture extends Component {
 
     processImage = (formData, config) => {
 
-        axios.post("http://10.0.0.12:3001/vision", formData, config)
+        axios.post("http://192.168.1.3:3001/vision", formData, config)
             .then((response) => {
                 console.log("Vison API Returning");
                 console.log(response.data);
                 this.setState({ isLoading: false, labels: response.data.labels });
             }).catch((error) => {
                 this.setState({ isLoading: false }, () => { console.log(error) });
-            }); 
-    }
-
-    processPlant = (plantName) => {
-        const endPoint = "http://10.0.0.12:3001/plants/name/" + plantName;
-        axios.post(endPoint)
-            .then((response) => {
-                console.log("Plant Name Look Up");
-                console.log(response.data);
-                this.setState({ isLoading: false });
-            }).catch((error) => {
-                this.setState({ isLoading: false }, () => { console.log(error) });
             });
     }
+
+
 
     componentDidMount() {
         this.setState({ file: null, labels: null})
@@ -64,7 +54,7 @@ class ImageCapture extends Component {
         console.log(this.state.labels)
         console.log(this.state.plantName)
     }
-   
+
     onChange = (e) => {
         this.setState({ file: e.target.files[0] });
     }
@@ -72,16 +62,16 @@ class ImageCapture extends Component {
     selectHandleChange = (event) => {
         console.log(event.target.value)
         const pname = event.target.value
-        this.processPlant(pname)
+        this.props.processPlant(pname)
         //this.setState({ plantName: pname});
 
 
     }
 
-    
+
 
     render() {
-      
+
         return (
             <div>
                 {this.state.labels ? (

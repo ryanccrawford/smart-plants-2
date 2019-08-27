@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+const apiKey = process.env.PLANT_API_KEY;
 
 
 export default function SelectItem(props){
@@ -41,8 +41,8 @@ export default function SelectItem(props){
                 }
                 )
                 }
-                                       
-               
+
+
             </Select>
             {hint ? (<FormHelperText>{hint}</FormHelperText>) : (null)}
         </FormControl>

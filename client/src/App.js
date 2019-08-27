@@ -1,11 +1,11 @@
 import React from 'react';
-import ImageCapture from './components/ImageCapture'
+import PlantSetup from './components/PlantSetup'
 
 
 function App() {
   return (
     <div>
-          <ImageCapture/>
+          <PlantSetup/>
     </div>
   );
 }
