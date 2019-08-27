@@ -115,8 +115,8 @@ const sidebarStyle = theme => ({
     display: "block",
     top: "0",
     left: "0",
-    backgroundSize: "cover",
-    backgroundPosition: "center center",
+    backgroundSize: "contain",
+    backgroundPosition: "bottom",
     "&:after": {
       position: "absolute",
       zIndex: "3",
@@ -126,7 +126,8 @@ const sidebarStyle = theme => ({
       display: "block",
       background: blackColor,
       opacity: ".8"
-    }
+      },
+      backgroundRepeat: "no-repeat"
   },
   list: {
     marginTop: "20px",

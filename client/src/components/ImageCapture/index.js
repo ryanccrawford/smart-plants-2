@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SelectItem from '../SelectItem';
-
+require('dotenv').config();
+const server = process.env.DEV_SERVER || process.env.PRODUCTION_SERVER || "http://localhost:3001"
 class ImageCapture extends Component {
 
     constructor(props) {
@@ -33,7 +34,7 @@ class ImageCapture extends Component {
 
     processImage = (formData, config) => {
 
-        axios.post("http://192.168.1.3:3001/vision", formData, config)
+        axios.post( server + "vision", formData, config)
             .then((response) => {
                 console.log("Vison API Returning");
                 console.log(response.data);

@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
 import ImageCapture from '../ImageCapture';
 import { FormControl } from '@material-ui/core';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
+import axios from 'axios';
+require('dotenv').config();
+
+const server = process.env.DEV_SERVER || process.env.PRODUCTION_SERVER
+console.log(server)
+
 
 class PlantSetup extends Component {
 
@@ -60,7 +60,7 @@ class PlantSetup extends Component {
     }
 
     processPlant = () => {
-        const endPoint = "http://10.0.0.12:3001/plants/name/" + this.state.plantNameTyped;
+        const endPoint = server + "../plants/name/" + this.state.plantNameTyped;
         axios.get(endPoint)
             .then((response) => {
                 console.log("Plant Name Look Up");
@@ -75,7 +75,7 @@ class PlantSetup extends Component {
 
         return (
             <Container maxWidth="sm">
-               
+
             <div>
                 <ImageCapture
                     processPlant={this.processPlant}
@@ -94,16 +94,16 @@ class PlantSetup extends Component {
                     <button onClick={this.handleSubmit}>Find</button>
                     </FormControl>
                     <List component="nav" aria-label="main mailbox folders">
-                
+
                 {this.state.plantData ? (this.state.plantData.map((plant, index) => {
-                
+
 
                         return (
-                      
+
                                 <ListItem
                                 key={index}
                                 button
-    
+
                                 selected={this.state.selectedIndex === parseInt(index)}
                                 data-link={plant.link}
                                 onClick={(event) => this.handleListItemClick(index)}
@@ -111,9 +111,9 @@ class PlantSetup extends Component {
                                 <ListItemText primary={(plant.common_name ? plant.common_name.toUpperCase() : (<em>{plant.scientific_name.toUpperCase()}</em>))}
                                     secondary={(plant.common_name ? <em>{plant.scientific_name.toLowerCase()}</em> : (""))} />
                                 </ListItem>
-                            
+
                             )
-                      
+
                     })) : (null)}
                             </List>
                 {this.state.isLoading ? (
