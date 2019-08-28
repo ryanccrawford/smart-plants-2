@@ -41,7 +41,7 @@ module.exports = function (app) {
     });
 
     /* GET plants By id */
-    app.post('/plants/id/:id', function (req, res, next) {
+    app.get('/plants/id/:id', function (req, res, next) {
         console.log("inside /plants/id");
 
         const plantId = req.params.id;
@@ -50,12 +50,12 @@ module.exports = function (app) {
 
         if (plantId) {
             console.log("inside search find plant id");
-            const term = `/${plantId}`;
+            const id = `/${plantId}`;
             const token = `?token=${apiKey}`;
-            const endPoint = 'https://trefle.io/api/plants' + term + token;
+            const endPoint = 'https://trefle.io/api/plants' + id + token;
             console.log(endPoint);
             axios.get(endPoint).then(result => {
-                console.log(result.data);
+                
                 res.json(result.data);
             }).catch(error => {
                 console.log(error);
@@ -194,10 +194,6 @@ module.exports = function (app) {
 
 
 
-
-    app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname, "../../client/build/index.html"));
-    });
 
 
 

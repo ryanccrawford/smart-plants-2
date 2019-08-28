@@ -21,8 +21,8 @@ import Person from "@material-ui/icons/Person";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
-import History from "views/TableList/TableList.js";
-import PlantSetup from "./components/PlantSetup";
+import History from "views/History/History.js";
+import PlantSetup from "views/PlantSetup/PlantSetup.js";
 import Devices from "views/Icons/Icons.js";
 import Maps from "views/Maps/Maps.js";
 import Support from "views/Notifications/Notifications.js";
