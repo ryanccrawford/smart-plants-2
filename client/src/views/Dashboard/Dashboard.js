@@ -50,6 +50,7 @@ export default function Dashboard() {
                       name="Moisture"
                       icon={<Cloud />}
                       color="liteblue"
+                      gColor="#4444ff"
                       value={45}
                       max={100}
                       min={0}
@@ -73,6 +74,7 @@ export default function Dashboard() {
                       name="Avg Brightness"
                       icon={(<Icon>brightness_low</Icon>)}
                       color="yellow"
+                      gColor="#ffee00"
                       value={95}
                       max={100}
                       min={0}
@@ -96,6 +98,7 @@ export default function Dashboard() {
                       name="Live Temperature"
                       icon={(<Icon>ac_unit</Icon>)}
                       color="blue"
+
                       value={75}
                       max={110}
                       min={-20}
@@ -120,6 +123,7 @@ export default function Dashboard() {
                       name="Overall Health"
                       icon={(<Icon>healing</Icon>)}
                       color="red"
+                      gColor="#ff3333"
                       value={80}
                       max={100}
                       min={0}

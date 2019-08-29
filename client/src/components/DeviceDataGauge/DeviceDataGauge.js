@@ -23,8 +23,9 @@ import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 //Gagues
-import Gauge from 'react-canvas-gauge';
-import { LinearGauge } from 'react-canvas-gauges';
+//import Gauge from 'react-canvas-gauge';
+//import { LinearGauge } from 'react-canvas-gauges';
+import Gauge from 'react-svg-gauge';
 
 export default class DeviceDataGauge extends Component {
 
@@ -71,7 +72,7 @@ export default class DeviceDataGauge extends Component {
 
     }
     componentDidMount() {
-        
+
         //this.updateTimer = setTimeout(this.doStateChange, this.interval)
        // this.getStateFromDatabase()
     }
@@ -100,12 +101,12 @@ export default class DeviceDataGauge extends Component {
 
     doStateChange = () => {
 
-        
+
 
     }
 
     handleTick = () => {
-        
+
         let name = this.refs.name.value;
         let value = this.refs.value.value;
         let deviceId = this.refs.deviceId.value;
@@ -137,7 +138,7 @@ export default class DeviceDataGauge extends Component {
         this.refs.value.value = DeviceSensors.value;
     }
 
-    
+
 
     render() {
         let unit = ""
@@ -156,52 +157,61 @@ export default class DeviceDataGauge extends Component {
         if (this.state.isCustom) {
             unit = " " + this.state.customUnit
         }
-        
+
         const guageStyle = {
             display: 'inline-block',
             margin: '15px auto',
             width: '150px',
             height: '150px'
         }
-        
+        let gColor = "";
+        if (parseInt(this.state.value) < 75) {
+            gColor = "#0000ff";
+        }
+        if (parseInt(this.state.value) >= 75 && parseInt(this.state.value) < 80) {
+            gColor = "#99ffff";
+        }
+        if (parseInt(this.state.value) >= 80 && parseInt(this.state.value) < 90) {
+            gColor = "#ffff00";
+        }
+        if (parseInt(this.state.value) >= 90) {
+            gColor = "#ff0000";
+        }
+
         return (
-          
+
             <Card>
                 <CardHeader color={this.state.color} stats icon>
                     <CardIcon color={this.state.color}>
                         <Icon>{this.state.icon}</Icon>
                     </CardIcon>
-                    
+
                     <h3 className={this.props.classes.cardTitle}>
                         {this.state.value} <small>{unit}</small>
                     </h3><p className={this.props.classes.cardCategory}>{this.state.name}</p>
                 </CardHeader>
                 <CardBody>
-                {this.state.types !== "temp" ? (
-                    <Gauge
-                    style={guageStyle}
-                    size={this.state.max}
-                    unit={unit}
-                    type={this.props.type}
-                    theme={"light"}
-                    gaugeSize={24}
-                    mode={this.state.type}
-                    minValue={this.state.min}
-                    value={this.state.value}
-                    scaleList={this.props.scaleList}
-                />) : (
-                        <LinearGauge
-                            width="100"
-                            height="250"
-                            borderRadius="20"
-                            units={unit}
-                            title='Temp'
+                    {this.state.types !== "temp" ? (
+                        <Gauge
+                            width={"320"}
+                            height={"320"}
+                            color={this.props.gColor}
+                            label={this.state.name}
+                            max={this.state.max}
+                            min={this.state.min}
                             value={this.state.value}
-                            minValue={this.state.min}
-                            maxValue={this.state.max}
-                            majorTicks={['-10','0', '5', '15', '20', '25', '30', '35', '40', '45', '50', '60' , '70' , '80', '90', 100, 110]}
-                            minorTicks={2}
-                            ></LinearGauge>)}
+                    />) : (
+                        <Gauge
+                            width={"320"}
+                                height={"320"}
+                            label={this.state.name}
+                            color={gColor}
+                            value={this.state.value}
+                            min={this.state.min}
+                            max={this.state.max}
+
+                            />
+                        )}
                     </CardBody>
                 <CardFooter stats>
                     <div className={this.props.classes.stats}>
@@ -214,7 +224,7 @@ export default class DeviceDataGauge extends Component {
                     </div>
                 </CardFooter>
             </Card>
-         
+
         )
 
 
