@@ -4,9 +4,41 @@ const apiKey = process.env.PLANT_API_KEY;
 const multer = require('multer');
 const upload = multer({ dest: __dirname + '/uploads/images' });
 const vision = require('@google-cloud/vision');
+const { PubSub } = require('@google-cloud/pubsub');
 const path = require('path');
 const db = require("../models");
 
+// Creates a client
+const pubsub = new PubSub();
+
+/**
+ * TODO(developer): Uncomment the following lines to run the sample.
+ */
+const subscriptionName = 'iot-subscription';
+const timeout = 10000;
+
+// References an existing subscription
+const subscription = pubsub.subscription(subscriptionName);
+
+// Create an event handler to handle messages
+let messageCount = 0;
+const messageHandler = message => {
+    console.log(`Received message ${message.id}:`);
+    console.log(`\tData: ${message.data}`);
+    console.log(`\tAttributes: ${message.attributes}`);
+    messageCount += 1;
+
+    // "Ack" (acknowledge receipt of) the message
+    message.ack();
+};
+
+// Listen for new messages until timeout is hit
+subscription.on(`message`, messageHandler);
+
+setTimeout(() => {
+    subscription.removeListener('message', messageHandler);
+    console.log(`${messageCount} message(s) received.`);
+}, timeout * 1000);
 
 
 Number.prototype.map = function (in_min, in_max, out_min, out_max) {
@@ -55,7 +87,7 @@ module.exports = function (app) {
             const endPoint = 'https://trefle.io/api/plants' + id + token;
             console.log(endPoint);
             axios.get(endPoint).then(result => {
-                
+
                 res.json(result.data);
             }).catch(error => {
                 console.log(error);
