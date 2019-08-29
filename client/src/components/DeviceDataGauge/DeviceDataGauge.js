@@ -1,14 +1,11 @@
 import React, { Component } from "react";
-// FIREBASE DATABASE
-import Firebase from 'firebase';
-import config from './config.js';
-// react plugin for creating charts
-import ChartistGraph from "react-chartist";
+
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
 // @material-ui/icons
 import Store from "@material-ui/icons/Store";
+import Danger from "components/Typography/Danger.js"
 import Warning from "@material-ui/icons/Warning";
 import DateRange from "@material-ui/icons/DateRange";
 import LocalOffer from "@material-ui/icons/LocalOffer";
@@ -27,12 +24,13 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 //Gagues
 import Gauge from 'react-canvas-gauge';
+import { LinearGauge } from 'react-canvas-gauges';
 
 export default class DeviceDataGauge extends Component {
 
     constructor(props) {
         super(props)
-        Firebase.initializeApp(config.firebase);
+        this.Firebase = this.props.Firebase
         this.updateTimer = null;
         this.interval = this.props.interval || 1000
         //this.dataSource = this.props.dataSource
@@ -45,12 +43,17 @@ export default class DeviceDataGauge extends Component {
             "litered":"rose",
             "white": "white"
         }
-
+        let c = ""
+        if (this.props.color.startsWith("#")) {
+            c = this.props.color
+        } else {
+           c = this.colors[this.props.color]
+        }
         this.state = {
             DeviceSensors: [],
             name: this.props.name,
             icon: this.props.icon,
-            color: this.colors[this.props.color],
+            color: c ,
             value: this.props.value,
             stopTimer: this.props.stopTimer || false,
             timerIsRunning: this.props.timerIsRunning || false,
@@ -62,15 +65,15 @@ export default class DeviceDataGauge extends Component {
             isDegree: this.props.isDegree || false,
             isTemp: this.props.isTemp || false,
             isNumber: this.props.isNumber || true,
-            scaleList: this.props.scalelist || [],
-            updateValue: this.props.updateValue
+            updateValue: this.props.updateValue,
+            types: this.props.types || "gauge"
         }
 
     }
     componentDidMount() {
         
-        this.updateTimer = setTimeout(this.doStateChange, this.interval)
-        this.getStateFromDatabase()
+        //this.updateTimer = setTimeout(this.doStateChange, this.interval)
+       // this.getStateFromDatabase()
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -82,12 +85,12 @@ export default class DeviceDataGauge extends Component {
     }
 
     setStateFromDatabase = () => {
-        Firebase.database().ref('/').set(this.state);
+        this.Firebase.database().ref('/').set(this.state);
         console.log('DATA SAVED');
     }
 
     getStateFromDatabase = () => {
-        let ref = Firebase.database().ref('/');
+        let ref = this.Firebase.database().ref('/');
         ref.on('value', snapshot => {
             const state = snapshot.val();
             this.setState(state);
@@ -148,13 +151,19 @@ export default class DeviceDataGauge extends Component {
             unit = " %"
         }
         if (this.state.isTemp) {
-            unit = " " + decodeURI('%C2%B0C')
+            unit = " " + decodeURI('%C2%B0F')
         }
         if (this.state.isCustom) {
             unit = " " + this.state.customUnit
         }
         
-
+        const guageStyle = {
+            display: 'inline-block',
+            margin: '15px auto',
+            width: '150px',
+            height: '150px'
+        }
+        
         return (
           
             <Card>
@@ -162,22 +171,40 @@ export default class DeviceDataGauge extends Component {
                     <CardIcon color={this.state.color}>
                         <Icon>{this.state.icon}</Icon>
                     </CardIcon>
-                    <div>
-                        <Gauge
-                            size={this.state.max}
-                            title={this.state.name}
-                            unit={unit}
-                            scaleList={this.state.scaleList}
-                            minValue={this.state.min}
-                            value={parseFloat(this.state.currentData)}
-                        />
-                    </div>
-                    <h3 className={classes.cardTitle}>
+                    
+                    <h3 className={this.props.classes.cardTitle}>
                         {this.state.value} <small>{unit}</small>
-                    </h3>
+                    </h3><p className={this.props.classes.cardCategory}>{this.state.name}</p>
                 </CardHeader>
+                <CardBody>
+                {this.state.types !== "temp" ? (
+                    <Gauge
+                    style={guageStyle}
+                    size={this.state.max}
+                    unit={unit}
+                    type={this.props.type}
+                    theme={"light"}
+                    gaugeSize={24}
+                    mode={this.state.type}
+                    minValue={this.state.min}
+                    value={this.state.value}
+                    scaleList={this.props.scaleList}
+                />) : (
+                        <LinearGauge
+                            width="100"
+                            height="250"
+                            borderRadius="20"
+                            units={unit}
+                            title='Temp'
+                            value={this.state.value}
+                            minValue={this.state.min}
+                            maxValue={this.state.max}
+                            majorTicks={['-10','0', '5', '15', '20', '25', '30', '35', '40', '45', '50', '60' , '70' , '80', '90', 100, 110]}
+                            minorTicks={2}
+                            ></LinearGauge>)}
+                    </CardBody>
                 <CardFooter stats>
-                    <div className={classes.stats}>
+                    <div className={this.props.classes.stats}>
                         <Danger>
                             <Warning />
                         </Danger>

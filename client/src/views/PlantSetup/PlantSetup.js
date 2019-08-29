@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
-import ImageCapture from '/../../components/ImageCapture';
+import ImageCapture from 'components/ImageCapture';
 import { FormControl } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import GridItem from "components/Grid/GridItem.js";

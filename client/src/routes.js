@@ -23,9 +23,9 @@ import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import History from "views/History/History.js";
 import PlantSetup from "views/PlantSetup/PlantSetup.js";
-import Devices from "views/Icons/Icons.js";
+import Devices from "views/Devices/Devices.js";
 import Maps from "views/Maps/Maps.js";
-import Support from "views/Notifications/Notifications.js";
+import Support from "views/Support/Support.js";
 
 
 const dashboardRoutes = [

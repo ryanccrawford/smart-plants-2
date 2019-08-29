@@ -48,7 +48,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function Notifications() {
+export default function Support() {
   const classes = useStyles();
   const [tl, setTL] = React.useState(false);
   const [tc, setTC] = React.useState(false);
@@ -57,9 +57,9 @@ export default function Notifications() {
   const [bc, setBC] = React.useState(false);
   const [br, setBR] = React.useState(false);
   React.useEffect(() => {
-    // Specify how to clean up after this effect:
+    
     return function cleanup() {
-      // to stop the warning of calling setState of unmounted component
+      
       var id = window.setTimeout(null, 0);
       while (id--) {
         window.clearTimeout(id);
@@ -123,47 +123,27 @@ export default function Notifications() {
   return (
     <Card>
       <CardHeader color="primary">
-        <h4 className={classes.cardTitleWhite}>Notifications</h4>
-        <p className={classes.cardCategoryWhite}>
-          Handcrafted by our friends from{" "}
-          <a
-            target="_blank"
-            href="https://material-ui-next.com/?ref=creativetime"
-          >
-            Material UI
-          </a>{" "}
-          and styled by{" "}
-          <a
-            target="_blank"
-            href="https://www.creative-tim.com/?ref=mdr-notifications-page"
-          >
-            Creative Tim
-          </a>
-          . Please checkout the{" "}
-          <a href="#pablo" target="_blank">
-            full documentation
-          </a>
-          .
-        </p>
+              <h4 className={classes.cardTitleWhite}>Support</h4>
+              <p>Hardware and Software Support is just a click away</p>
       </CardHeader>
       <CardBody>
         <GridContainer>
           <GridItem xs={12} sm={12} md={6}>
             <h5>Notifications Style</h5>
             <br />
-            <SnackbarContent message={"This is a plain notification"} />
+                      <SnackbarContent message={"Hello"} />
             <SnackbarContent
-              message={"This is a notification with close button."}
+                          message={"Hello"}
               close
             />
             <SnackbarContent
-              message={"This is a notification with close button and icon."}
+                          message={"Hello"}
               close
               icon={AddAlert}
             />
             <SnackbarContent
               message={
-                "This is a notification with close button and icon and have many lines. You can see that the icon and the close button are always vertically aligned. This is a beautiful notification. So you don't have to worry about the style."
+                "Hello"
               }
               close
               icon={AddAlert}
@@ -174,35 +154,35 @@ export default function Notifications() {
             <br />
             <SnackbarContent
               message={
-                'INFO - This is a regular notification made with color="info"'
+                'INFO - Hello'
               }
               close
               color="info"
             />
             <SnackbarContent
               message={
-                'SUCCESS - This is a regular notification made with color="success"'
+                'SUCCESS - Hello'
               }
               close
               color="success"
             />
             <SnackbarContent
               message={
-                'WARNING - This is a regular notification made with color="warning"'
+                'WARNING - Hello'
               }
               close
               color="warning"
             />
             <SnackbarContent
               message={
-                'DANGER - This is a regular notification made with color="danger"'
+                'DANGER - Hello'
               }
               close
               color="danger"
             />
             <SnackbarContent
               message={
-                'PRIMARY - This is a regular notification made with color="primary"'
+                'PRIMARY - Hello'
               }
               close
               color="primary"
@@ -235,7 +215,7 @@ export default function Notifications() {
                   place="tl"
                   color="info"
                   icon={AddAlert}
-                  message="Welcome to MATERIAL DASHBOARD React - a beautiful freebie for every web developer."
+                                  message="Hello"
                   open={tl}
                   closeNotification={() => setTL(false)}
                   close
@@ -253,7 +233,7 @@ export default function Notifications() {
                   place="tc"
                   color="info"
                   icon={AddAlert}
-                  message="Welcome to MATERIAL DASHBOARD React - a beautiful freebie for every web developer."
+                                  message="Hello"
                   open={tc}
                   closeNotification={() => setTC(false)}
                   close
@@ -271,7 +251,7 @@ export default function Notifications() {
                   place="tr"
                   color="info"
                   icon={AddAlert}
-                  message="Welcome to MATERIAL DASHBOARD React - a beautiful freebie for every web developer."
+                                  message="Hello"
                   open={tr}
                   closeNotification={() => setTR(false)}
                   close
@@ -295,7 +275,7 @@ export default function Notifications() {
                   place="bl"
                   color="info"
                   icon={AddAlert}
-                  message="Welcome to MATERIAL DASHBOARD React - a beautiful freebie for every web developer."
+                                  message="Hello"
                   open={bl}
                   closeNotification={() => setBL(false)}
                   close
@@ -313,7 +293,7 @@ export default function Notifications() {
                   place="bc"
                   color="info"
                   icon={AddAlert}
-                  message="Welcome to MATERIAL DASHBOARD React - a beautiful freebie for every web developer."
+                                  message="Hello."
                   open={bc}
                   closeNotification={() => setBC(false)}
                   close
@@ -331,7 +311,7 @@ export default function Notifications() {
                   place="br"
                   color="info"
                   icon={AddAlert}
-                  message="Welcome to MATERIAL DASHBOARD React - a beautiful freebie for every web developer."
+                                  message="Hello"
                   open={br}
                   closeNotification={() => setBR(false)}
                   close

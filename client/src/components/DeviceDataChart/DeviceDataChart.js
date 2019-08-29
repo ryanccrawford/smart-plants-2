@@ -2,6 +2,8 @@ import React, { Component } from "react";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
+import ArrowUpward from "@material-ui/icons/ArrowUpward";
+
 // Components
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
