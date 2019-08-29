@@ -354,6 +354,6 @@ yarn-debug.log*
 yarn-error.log*
 
 smart-plants-2-*.json
-config/config.js
+
 
 routes/uploads/images/*
