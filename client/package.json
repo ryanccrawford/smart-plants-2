@@ -9,6 +9,7 @@
     "chartist": "^0.11.3",
     "classnames": "2.2.6",
     "dotenv": "^8.1.0",
+    "firebase": "^6.4.2",
     "history": "^4.9.0",
     "perfect-scrollbar": "1.4.0",
     "prop-types": "15.7.2",
@@ -39,7 +40,8 @@
     "eslint-plugin-prettier": "3.1.0",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
-    "prettier": "1.18.2"
+    "prettier": "1.18.2",
+    "react-canvas-gauge": "^1.0.2"
   },
   "browserslist": {
     "production": [
