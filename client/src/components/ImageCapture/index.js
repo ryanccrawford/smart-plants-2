@@ -3,7 +3,7 @@ import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SelectItem from '../SelectItem';
 require('dotenv').config();
-const server = process.env.DEV_SERVER || process.env.PRODUCTION_SERVER || "http://localhost:3001"
+const server = process.env.DEV_SERVER || ""
 class ImageCapture extends Component {
 
     constructor(props) {
