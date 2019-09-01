@@ -11,34 +11,51 @@ const db = require("../models");
 // Creates a client
 const pubsub = new PubSub();
 
-/**
- * TODO(developer): Uncomment the following lines to run the sample.
- */
 const subscriptionName = 'iot-subscription';
-const timeout = 10000;
 
-// References an existing subscription
 const subscription = pubsub.subscription(subscriptionName);
 
 // Create an event handler to handle messages
-let messageCount = 0;
-const messageHandler = message => {
-    console.log(`Received message ${message.id}:`);
-    console.log(`\tData: ${message.data}`);
-    console.log(`\tAttributes: ${message.attributes}`);
-    messageCount += 1;
 
-    // "Ack" (acknowledge receipt of) the message
-    message.ack();
+const messageHandler = message => {
+ 
+   
+    let m = message.data;
+
+
+    if (message.data.length > 0) {
+        console.log(m.toString());
+
+        let items = m.toString().split(",");
+
+        let dataMessage = {
+            
+            moisture: items[2],
+            light: 0,
+            sensorTempFehr: items[0],
+            weatherTemp: 0.00,
+            precipIntensity: items[4],
+            humidity: items[1],
+            windSpeed: items[3],
+            isWatering: 0
+        };
+        message.ack();
+        db.LiveStats.create(dataMessage)
+            .then((data) => {
+                console.log(data);
+                message.ack();
+            })
+            .catch(function (err) {
+                console.log(err);
+
+            });
+    }
 };
 
 // Listen for new messages until timeout is hit
 subscription.on(`message`, messageHandler);
 
-setTimeout(() => {
-    subscription.removeListener('message', messageHandler);
-    console.log(`${messageCount} message(s) received.`);
-}, timeout * 1000);
+
 
 
 Number.prototype.map = function (in_min, in_max, out_min, out_max) {
@@ -162,7 +179,7 @@ module.exports = function (app) {
         }
     });
 
-    app.get("/api/livegauge/", function (req, res) {
+    app.get("/api/livedata/:type", function (req, res) {
 
         var type = req.params.type.toLowerCase();
         var deviceId = parseInt(req.params.deviceId);
@@ -171,15 +188,12 @@ module.exports = function (app) {
             return;
         }
         var sqlQuery = "";
-        var column = "";
+        var column = "*";
 
         if (type === "moisture") {
             column = "moisture";
         }
-        if (type === "light") {
-            column = "light";
-        }
-        if (type === "temperature") {
+        if (type === "temp") {
             column = "sensorTempFehr";
         }
         if (type === "rain") {
@@ -188,33 +202,48 @@ module.exports = function (app) {
         if (type === "humidity") {
             column = "humidity";
         }
-        if (type === "windSpeed") {
+        if (type === "windspeed") {
             column = "windSpeed";
         }
         if (type === "waterison") {
             column = "isWatering";
         }
 
-        sqlQuery += "SELECT `" + column + "` ";
+        sqlQuery += "SELECT " + column + " ";
         sqlQuery += "FROM LiveStats ";
-        sqlQuery += "WHERE DeviceId=" + deviceId + " ";
+        //sqlQuery += "WHERE DeviceId=" + deviceId + " ";
         sqlQuery += "ORDER BY timeStamp DESC ";
         sqlQuery += "LIMIT 1;";
 
         db.sequelize
             .query(sqlQuery, { type: db.sequelize.QueryTypes.SELECT })
             .then(function (data) {
-                temp = 0;
+                tmp = null;
                 if (type === "moisture") {
-                    temp = parseInt(data[0].moisture).map(0, 1023, 0, 100).toString();
-                    data[0].moisture = temp;
+                    tmp = parseInt(data[0].moisture).map(0, 4023, 0, 100).toString();
+                    data[0].moisture = tmp;
                 }
-                if (type === "light") {
-                    temp = parseInt(data[0].light).map(0, 1023, 0, 100).toString();
-                    data[0].light = temp;
+                if (type === "temp") {
+                    tmp = data[0].tmp;
+                    data[0].temp = tmp;
                 }
-                console.log(data);
-
+                if (type === "rain") {
+                    tmp = parseInt(data[0].rain).map(0, 1023, 0, 100).toString();
+                    data[0].rain = tmp;
+                }
+                if (type === "humidity") {
+                    tmp = parseInt(data[0].humidity).map(0, 1023, 0, 100).toString();
+                    data[0].humidity = tmp;
+                }
+                if (type === "windspeed") {
+                    tmp = data[0].windspeed
+                    data[0].windspeed = tmp;
+                }
+                if (type === "waterison") {
+                    tmp = data[0].waterison ? true : false;
+                    data[0].waterison = tmp;
+                }
+              
                 res.json(data);
             })
             .catch(function (err) {
