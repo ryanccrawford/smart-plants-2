@@ -110,8 +110,8 @@ export default class Dashboard extends Component {
                             color="liteblue"
                             gColor="#4444ff"
                             value={this.state.moist}
-                            max={100}
-                            min={0}
+                            max={0}
+                            min={100}
                             customUnit={null}
                             isCustom={false}
                             isPercent={true}
