@@ -179,71 +179,15 @@ module.exports = function (app) {
         }
     });
 
-    app.get("/api/livedata/:type", function (req, res) {
-
-        var type = req.params.type.toLowerCase();
-        var deviceId = parseInt(req.params.deviceId);
-
-        if (typeof deviceId !== 'number') {
-            return;
-        }
-        var sqlQuery = "";
-        var column = "*";
-
-        if (type === "moisture") {
-            column = "moisture";
-        }
-        if (type === "temp") {
-            column = "sensorTempFehr";
-        }
-        if (type === "rain") {
-            column = "precipIntensity";
-        }
-        if (type === "humidity") {
-            column = "humidity";
-        }
-        if (type === "windspeed") {
-            column = "windSpeed";
-        }
-        if (type === "waterison") {
-            column = "isWatering";
-        }
-
-        sqlQuery += "SELECT " + column + " ";
-        sqlQuery += "FROM LiveStats ";
-        //sqlQuery += "WHERE DeviceId=" + deviceId + " ";
-        sqlQuery += "ORDER BY timeStamp DESC ";
-        sqlQuery += "LIMIT 1;";
+    app.get("/api/livedata", function (req, res) {
+        let sqlQuery = "";
+            sqlQuery += "SELECT * FROM LiveStats";
+        sqlQuery += " ORDER BY timeStamp DESC LIMIT 1;";
 
         db.sequelize
             .query(sqlQuery, { type: db.sequelize.QueryTypes.SELECT })
             .then(function (data) {
-                tmp = null;
-                if (type === "moisture") {
-                    tmp = parseInt(data[0].moisture).map(0, 4023, 0, 100).toString();
-                    data[0].moisture = tmp;
-                }
-                if (type === "temp") {
-                    tmp = data[0].tmp;
-                    data[0].temp = tmp;
-                }
-                if (type === "rain") {
-                    tmp = parseInt(data[0].rain).map(0, 1023, 0, 100).toString();
-                    data[0].rain = tmp;
-                }
-                if (type === "humidity") {
-                    tmp = parseInt(data[0].humidity).map(0, 1023, 0, 100).toString();
-                    data[0].humidity = tmp;
-                }
-                if (type === "windspeed") {
-                    tmp = data[0].windspeed
-                    data[0].windspeed = tmp;
-                }
-                if (type === "waterison") {
-                    tmp = data[0].waterison ? true : false;
-                    data[0].waterison = tmp;
-                }
-              
+                console.log(data);
                 res.json(data);
             })
             .catch(function (err) {
@@ -252,13 +196,9 @@ module.exports = function (app) {
             });
     });
 
-
-
-
-
-
-
-
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "../client/build/index.html"));
+    });
 
 };
 

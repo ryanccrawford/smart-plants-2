@@ -23,18 +23,12 @@ import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 //Gagues
-//import Gauge from 'react-canvas-gauge';
-//import { LinearGauge } from 'react-canvas-gauges';
 import Gauge from 'react-svg-gauge';
 
 export default class DeviceDataGauge extends Component {
 
     constructor(props) {
         super(props)
-        this.Firebase = this.props.Firebase
-        this.updateTimer = null;
-        this.interval = this.props.interval || 1000
-        //this.dataSource = this.props.dataSource
         this.colors = {
             "yellow":"warning",
             "green":"success",
@@ -71,39 +65,7 @@ export default class DeviceDataGauge extends Component {
         }
 
     }
-    componentDidMount() {
-
-        //this.updateTimer = setTimeout(this.doStateChange, this.interval)
-       // this.getStateFromDatabase()
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-
-        if (prevState !== this.state) {
-            this.setStateFromDatabase()
-        }
-
-    }
-
-    setStateFromDatabase = () => {
-        this.Firebase.database().ref('/').set(this.state);
-        console.log('DATA SAVED');
-    }
-
-    getStateFromDatabase = () => {
-        let ref = this.Firebase.database().ref('/');
-        ref.on('value', snapshot => {
-            const state = snapshot.val();
-            this.setState(state);
-        });
-        console.log('DATA RETRIEVED');
-    }
-
-    doStateChange = () => {
-
-
-
-    }
+  
 
     handleTick = () => {
 
@@ -196,19 +158,19 @@ export default class DeviceDataGauge extends Component {
                             width={"320"}
                             height={"320"}
                             color={this.props.gColor}
-                            label={this.state.name}
-                            max={this.state.max}
-                            min={this.state.min}
-                            value={this.state.value}
+                            label={this.props.name}
+                            max={this.props.max}
+                            min={this.props.min}
+                            value={this.props.value}
                     />) : (
                         <Gauge
                             width={"320"}
                                 height={"320"}
-                            label={this.state.name}
+                            label={this.props.name}
                             color={gColor}
-                            value={this.state.value}
-                            min={this.state.min}
-                            max={this.state.max}
+                            value={this.props.value}
+                            min={this.props.min}
+                            max={this.props.max}
 
                             />
                         )}

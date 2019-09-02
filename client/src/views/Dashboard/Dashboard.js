@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 // FIREBASE DATABASE
-import Firebase from 'firebase';
 import config from './config.js';
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
@@ -40,7 +39,7 @@ import { setInterval } from "timers";
 
 
 
-Firebase.initializeApp(config);
+
 
 
 
@@ -58,25 +57,19 @@ export default class Dashboard extends Component {
             other: 0
         }
 
-        this.timer = null
+      
 
     }
 
     ticker = () => {
 
-        axios.get("/api/livedata/all").then(result => {
-            let data = result.data
-            let moist = data.moisture;
-            let temp = ((parseFloat(data.sensorTempFehr) * (9 / 5)) + 32);
-            let heatIndex = data.precipIntensity
-            let humidity = data.humidity
-            let other = data.windSpeed
-            this.setState({
-                moist: moist,
-                temp: temp,
-                heatIndex: heatIndex,
-                humidity: humidity,
-                other: other})
+        axios.get("/api/livedata").then(result => {
+         
+            let data = result.data[0]
+            console.log(data)
+            //{id: 1, timeStamp: "2019-09-01 04:37:52", moisture: 0, light: 0, sensorTempFehr: 27, …}
+            this.setGauges(data)
+           
         }).catch(error => {
             throw error
         })
@@ -86,6 +79,23 @@ export default class Dashboard extends Component {
        
     }
 
+    setGauges = (data) => {
+        console.log(data)
+        let moist = (parseFloat(data.moisture) / 100) ;
+        let temp = parseInt(((parseFloat(data.sensorTempFehr) * (9 / 5)) + 32));
+        let heatIndex = parseFloat(data.precipIntensity) / 100
+        let humidity = parseFloat(data.humidity)
+        let other = parseFloat(data.windSpeed)
+        this.setState({
+            moist: moist,
+            temp: temp,
+            heatIndex: heatIndex,
+            humidity: humidity,
+            other: other
+        })
+
+    }
+
     render() {
         const classes = makeStyles(styles);
         return (
@@ -93,7 +103,7 @@ export default class Dashboard extends Component {
                 <GridContainer>
                     <GridItem xs={12} sm={6} md={3}>
                         <DeviceDataGauge
-                            Firebase={Firebase}
+                           
                             classes={classes}
                             name="Moisture"
                             icon={<Cloud />}
@@ -117,7 +127,7 @@ export default class Dashboard extends Component {
                     </GridItem>
                     <GridItem xs={12} sm={6} md={3}>
                         <DeviceDataGauge
-                            Firebase={Firebase}
+                           
                             classes={classes}
                             name="Humidity"
                             icon={(<Icon>brightness_low</Icon>)}
@@ -137,7 +147,7 @@ export default class Dashboard extends Component {
                     </GridItem>
                     <GridItem xs={12} sm={6} md={3}>
                         <DeviceDataGauge
-                            Firebase={Firebase}
+                           
                             classes={classes}
                             name="Live Temperature"
                             icon={(<Icon>ac_unit</Icon>)}
@@ -158,7 +168,7 @@ export default class Dashboard extends Component {
                     </GridItem>
                     <GridItem xs={12} sm={6} md={3}>
                         <DeviceDataGauge
-                            Firebase={Firebase}
+                          
                             classes={classes}
                             name="Overall Health"
                             icon={(<Icon>healing</Icon>)}
