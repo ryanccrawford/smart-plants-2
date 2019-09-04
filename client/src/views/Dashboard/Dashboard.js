@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+﻿import React, { Component } from "react";
 // FIREBASE DATABASE
 import config from './config.js';
 // @material-ui/core
@@ -36,14 +36,7 @@ import {
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import axios from 'axios';
 import { setInterval } from "timers";
-
-
-
-
-
-
-
-
+import WeatherAPI from "components/WeatherAPI/WeatherAPI.js"
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -57,7 +50,10 @@ export default class Dashboard extends Component {
             other: 0
         }
 
-      
+        this.interval = null;
+       
+     
+
 
     }
 
@@ -67,16 +63,23 @@ export default class Dashboard extends Component {
          
             let data = result.data[0]
             console.log(data)
-            //{id: 1, timeStamp: "2019-09-01 04:37:52", moisture: 0, light: 0, sensorTempFehr: 27, �}
+            //{id: 1, timeStamp: "2019-09-01 04:37:52", moisture: 0, light: 0, sensorTempFehr: 27, …}
             this.setGauges(data)
            
         }).catch(error => {
             throw error
         })
-}
+
+      
+    }
+
+    messageCB = (message) => {
+        this.setGauges(message.data)
+    }
+
     componentDidMount() {
-        setInterval(this.ticker, 2000);
-       
+        this.interval =  setInterval(this.ticker, 1000);
+ 
     }
 
     setGauges = (data) => {
@@ -95,37 +98,44 @@ export default class Dashboard extends Component {
         })
 
     }
+    componentWillUnmount() {
+
+        clearInterval(this.interval);
+
+    }
 
     render() {
         const classes = makeStyles(styles);
+        let currentVal = parseInt(this.state.moist);
+        let hexColor = "#0000FF"
+        if (currentVal > 0) {
+            let mColor = ((1677200 / currentVal) * 100);
+             hexColor = "#" + mColor.toString(16);
+        }
         return (
             <div>
                 <GridContainer>
-                    <GridItem xs={12} sm={6} md={3}>
+                    <GridItem xs={12} sm={6} md={4}>
+                       
                         <DeviceDataGauge
-                           
                             classes={classes}
                             name="Moisture"
                             icon={<Cloud />}
                             color="liteblue"
-                            gColor="#4444ff"
+                            gColor={hexColor}
                             value={this.state.moist}
-                            max={0}
-                            min={100}
+                            max={100}
+                            min={0}
                             customUnit={null}
                             isCustom={false}
                             isPercent={true}
                             isDegree={false}
                             isTemp={false}
                             isNumber={false}
-                            scaleList={[
-                                { scale: 5, quantity: 5, startColor: '#327aff', endColor: '#327aff' },
-                                { scale: 5, quantity: 5, startColor: '#327aff', endColor: 'skyblue' },
-                                { scale: 10, quantity: 5, startColor: 'skyblue', endColor: 'skyblue' }
-                            ]}
+                            
                         />
                     </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
+                    <GridItem xs={12} sm={6} md={4}>
                         <DeviceDataGauge
                            
                             classes={classes}
@@ -136,23 +146,23 @@ export default class Dashboard extends Component {
                             value={this.state.humidity}
                             max={100}
                             min={0}
-                            customUnit={SVGFETurbulenceElement}
+                            customUnit={""}
                             isCustom={false}
                             isPercent={true}
                             isDegree={false}
                             isTemp={false}
                             isNumber={false}
-                         
+                            on={true}
                         />
                     </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
+                    <GridItem xs={12} sm={6} md={4}>
                         <DeviceDataGauge
                            
                             classes={classes}
-                            name="Live Temperature"
+                            name="Temp"
                             icon={(<Icon>ac_unit</Icon>)}
                             color="blue"
-
+                            on={true}
                             value={this.state.temp}
                             max={110}
                             min={-20}
@@ -166,30 +176,7 @@ export default class Dashboard extends Component {
                             
                         />
                     </GridItem>
-                    <GridItem xs={12} sm={6} md={3}>
-                        <DeviceDataGauge
-                          
-                            classes={classes}
-                            name="Overall Health"
-                            icon={(<Icon>healing</Icon>)}
-                            color="red"
-                            gColor="#ff3333"
-                            value={80}
-                            max={100}
-                            min={0}
-                            customUnit=" U"
-                            isCustom={true}
-                            isPercent={false}
-                            isDegree={false}
-                            isTemp={false}
-                            isNumber={false}
-                            scaleList={[
-                                { scale: 5, quantity: 5, startColor: '#327aff', endColor: '#327aff' },
-                                { scale: 5, quantity: 5, startColor: '#327aff', endColor: 'skyblue' },
-                                { scale: 10, quantity: 5, startColor: 'skyblue', endColor: 'skyblue' }
-                            ]}
-                        />
-                    </GridItem>
+                   
                 </GridContainer>
                 <GridContainer>
                     <GridItem xs={12} sm={12} md={4}>

@@ -55,6 +55,29 @@ const messageHandler = message => {
 // Listen for new messages until timeout is hit
 subscription.on(`message`, messageHandler);
 
+const deleteData = () => {
+    let sqlQuery = "";
+    sqlQuery += "SELECT * FROM LiveStats";
+    sqlQuery += " ORDER BY timeStamp DESC LIMIT 1;";
+
+    db.sequelize
+        .query(sqlQuery, { type: db.sequelize.QueryTypes.SELECT })
+        .then(function (data) {
+            let lastRowId = data[0].id;
+            db.LiveStats.destroy({
+                where: { id: { $notIn: [lastRowId] } }
+            }).catch(function (err) {
+                console.log(err);
+            });
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+
+};
+
+
+setInterval(deleteData, 60000);
 
 
 

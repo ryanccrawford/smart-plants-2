@@ -22,8 +22,10 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import ContainerDimensions from 'react-container-dimensions'
 //Gagues
 import Gauge from 'react-svg-gauge';
+import Switch from "react-switch";
 
 export default class DeviceDataGauge extends Component {
 
@@ -60,46 +62,33 @@ export default class DeviceDataGauge extends Component {
             isDegree: this.props.isDegree || false,
             isTemp: this.props.isTemp || false,
             isNumber: this.props.isNumber || true,
-            updateValue: this.props.updateValue,
-            types: this.props.types || "gauge"
+            types: this.props.types || "gauge",
+            on: true,
+            
         }
 
     }
-  
+    switchHandleChange = () => {
+        this.setState({ on: !this.state.on });
+    }
+    valueFormatter = (value) => {
 
-    handleTick = () => {
+         return value + " %" 
 
-        let name = this.refs.name.value;
-        let value = this.refs.value.value;
-        let deviceId = this.refs.deviceId.value;
-
-        if (deviceId && name && value) {
-            const { DeviceSensors } = this.state;
-            const DeviceSensorsIndex = DeviceSensors.findIndex(data => {
-                return data.deviceId === deviceId
-            });
-            DeviceSensors[DeviceSensorsIndex].name = name;
-            DeviceSensors[DeviceSensorsIndex].value = value;
-            this.setState({ DeviceSensors });
-        }
-        else if (name && value) {
-            const deviceId = new Date().getTime().toString();
-            const { DeviceSensors } = this.state;
-            DeviceSensors.push({ deviceId, name, value })
-            this.setState({ DeviceSensors });
-        }
-
-        this.refs.deviceId.value = '';
-        this.refs.name.value = '';
-        this.refs.value.value = '';
     }
 
-    updateData = (DeviceSensors) => {
-        this.refs.deviceId.value = DeviceSensors.deviceId;
-        this.refs.name.value = DeviceSensors.name;
-        this.refs.value.value = DeviceSensors.value;
-    }
 
+
+    percentFormatter = (value) => {
+
+        return (value + " %")
+                
+    }
+    tempFormatter = (value) => {
+
+        return (value + decodeURI('%C2%B0F'))
+
+    }
 
 
     render() {
@@ -120,69 +109,71 @@ export default class DeviceDataGauge extends Component {
             unit = " " + this.state.customUnit
         }
 
-        const guageStyle = {
-            display: 'inline-block',
-            margin: '15px auto',
-            width: '150px',
-            height: '150px'
+        const valueStyle = {
+            fontSize: '2em'
+        }
+        const topStyle = {
+            fontSize: '3em'
         }
         let gColor = "";
-        if (parseInt(this.state.value) < 75) {
+        if (parseInt(this.props.value) < 75) {
             gColor = "#0000ff";
         }
-        if (parseInt(this.state.value) >= 75 && parseInt(this.state.value) < 80) {
+        if (parseInt(this.props.value) >= 75 && parseInt(this.state.value) < 80) {
             gColor = "#99ffff";
         }
-        if (parseInt(this.state.value) >= 80 && parseInt(this.state.value) < 90) {
+        if (parseInt(this.props.value) >= 80 && parseInt(this.state.value) < 90) {
             gColor = "#ffff00";
         }
-        if (parseInt(this.state.value) >= 90) {
+        if (parseInt(this.props.value) >= 90) {
             gColor = "#ff0000";
         }
-
+      
         return (
 
             <Card>
-                <CardHeader color={this.state.color} stats icon>
+                <CardHeader color={this.state.color} style={{ display: 'inline-block' }} stats icon>
                     <CardIcon color={this.state.color}>
-                        <Icon>{this.state.icon}</Icon>
-                    </CardIcon>
-
-                    <h3 className={this.props.classes.cardTitle}>
-                        {this.state.value} <small>{unit}</small>
-                    </h3><p className={this.props.classes.cardCategory}>{this.state.name}</p>
+                        <Icon>{this.props.icon}</Icon>
+                        <p style={{ display: 'inline-block', fontSize: '2em', fontWeight: '600', paddingRight: '10px', lineHeight : '-5em'}}>
+                            {this.state.name}</p>
+                    </CardIcon> 
+                   
                 </CardHeader>
                 <CardBody>
-                    {this.state.types !== "temp" ? (
-                        <Gauge
-                            width={"320"}
-                            height={"320"}
-                            color={this.props.gColor}
-                            label={this.props.name}
+                   <ContainerDimensions>
+                        {({ width, height }) => (<Gauge 
+                            width={(width / 1.1 ).toString()}
+                            height={"300"}
+                            color={this.state.on ? gColor : "#222222"}
+                            label={""}
                             max={this.props.max}
                             min={this.props.min}
-                            value={this.props.value}
-                    />) : (
-                        <Gauge
-                            width={"320"}
-                                height={"320"}
-                            label={this.props.name}
-                            color={gColor}
-                            value={this.props.value}
-                            min={this.props.min}
-                            max={this.props.max}
-
-                            />
-                        )}
+                            value={this.state.on ? this.props.value : 0}
+                            valueLabelStyle={valueStyle}
+                            topLabelStyle={topStyle}
+                            valueFormatter={!this.props.isTemp ? this.percentFormatter : this.tempFormatter}
+                        />
+                        )
+                        }
+                            
+                  </ContainerDimensions>
                     </CardBody>
                 <CardFooter stats>
                     <div className={this.props.classes.stats}>
-                        <Danger>
-                            <Warning />
-                        </Danger>
-                        <a href="#pablo" onClick={e => e.preventDefault()}>
-                            Actions
-                </a>
+                        <label>
+                            <span>Connection</span>
+                            
+                       
+                        {this.state.on ? (
+                           <div><Icon>{"compare_arrows"}</Icon><span> Connected</span></div>
+                        ) : (
+                                <Danger>
+                                    <Warning /><span> Not Connected</span>
+                                </Danger>)
+                            }
+                            <span>OFF </span> <Switch onChange={this.switchHandleChange} checked={this.state.on ? "checked" : ""} /> <span> ON</span>
+                        </label>
                     </div>
                 </CardFooter>
             </Card>
