@@ -24,7 +24,7 @@ class PlantSetup extends Component {
 
     constructor(props) {
         super(props)
-        this.server = "http://10.0.0.12:3001/"; 
+        this.server = "";
 
         this.state = {
             isLoading: false,
@@ -46,10 +46,10 @@ class PlantSetup extends Component {
             console.log(this.state.plantData)
             this.getImageAvatar(this.state.plantData)
         }
-        
+
     }
 
-      
+
 
     handleChange = (e) => {
        // e.preventDefault();
@@ -81,14 +81,14 @@ class PlantSetup extends Component {
                     console.log(plantCard)
                     this.setState({ plants: [...this.state.plants, plantCard] })
                 }
-                    
+
                 ).catch((error) => {
                     return (null)
                 });
         })
-    } 
+    }
     plantCard = (data) => {
-        
+
         return (
             <GridItem xs={12} sm={12} md={4}>
             <Card profile>
@@ -129,7 +129,7 @@ class PlantSetup extends Component {
                 this.setState({ isLoading: false }, () => { console.log(error) });
             });
     }
-    
+
 
     render() {
 
@@ -158,7 +158,7 @@ class PlantSetup extends Component {
 
                             return item;
 
-                        })}  
+                        })}
                     </GridContainer>
                 {this.state.isLoading ? (
                     <CircularProgress className={"progress"} color="secondary" />

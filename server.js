@@ -21,9 +21,9 @@ app.use(express.json());
 if (process.env.NODE_ENV === "production") {
     app.use(express.static("client/build"));
 }
-
-require("./routes/apiRoutes")(app);
 require("./routes/dataRoutes")(app);
+require("./routes/apiRoutes")(app);
+
 
 var syncOptions = { force: false };
 

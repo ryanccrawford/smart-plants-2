@@ -20,7 +20,8 @@ const appStyle = theme => ({
     ...transition,
     maxHeight: "100%",
     width: "100%",
-    overflowScrolling: "touch"
+      overflowScrolling: "touch",
+      backgroundColor: "#89CEEF"
   },
   content: {
     marginTop: "70px",

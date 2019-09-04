@@ -31,9 +31,9 @@ export default class WeatherAPI extends Component {
     componentDidMount() {
         Weather.find({ search: 'Orlando, Florida', degreeType: 'F' }, (err, result) => {
             if (err) {
-                this.setState({ error: err }, iniInterval)
+                this.setState({ error: err }, this.iniInterval)
             } else {
-                this.setState({ weather: result }, iniInterval)
+                this.setState({ weather: result }, this.iniInterval)
             }
 
             

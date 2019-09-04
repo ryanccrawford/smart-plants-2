@@ -1,5 +1,5 @@
-var db = require("../models");
-
+const db = require("../models");
+const path = require('path');
 module.exports = function(app) {
   // users functions
   app.get("/api/users", function(req, res) {
@@ -233,7 +233,5 @@ module.exports = function(app) {
     });
   });
 
-  app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname, "../../client/build/index.html"));
-  });
+ 
 };

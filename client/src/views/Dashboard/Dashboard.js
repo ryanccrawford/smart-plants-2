@@ -1,6 +1,5 @@
-import React from "react";
+﻿import React, { Component } from "react";
 // FIREBASE DATABASE
-import Firebase from 'firebase';
 import config from './config.js';
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
@@ -28,159 +27,174 @@ import CustomTabs from "components/CustomTabs/CustomTabs.js";
 import Danger from "components/Typography/Danger.js";
 import DeviceDataGauge from "components/DeviceDataGauge/DeviceDataGauge.js";
 import DeviceDataChart from "components/DeviceDataChart/DeviceDataChart.js";
-import {
-    dailySalesChart,
-    emailsSubscriptionChart,
-    completedTasksChart
-} from "variables/charts.js";
+import dailyPlantData from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import axios from 'axios';
+import { setInterval } from "timers";
+import WeatherAPI from "components/WeatherAPI/WeatherAPI.js"
 
-const useStyles = makeStyles(styles);
-Firebase.initializeApp(config);
-export default function Dashboard() {
-  const classes = useStyles();
-  return (
-    <div>
-      <GridContainer>
-        <GridItem xs={12} sm={6} md={3}>
-                  <DeviceDataGauge
-                      Firebase={Firebase}
-                      classes={classes}
-                      name="Moisture"
-                      icon={<Cloud />}
-                      color="liteblue"
-                      value={45}
-                      max={100}
-                      min={0}
-                      customUnit={null}
-                      isCustom={false}
-                      isPercent={true}
-                      isDegree={false}
-                      isTemp={false}
-                      isNumber={false}
-                      scaleList={[
-                  {scale: 5, quantity: 5, startColor: '#327aff', endColor: '#327aff' },
-            {scale: 5, quantity: 5, startColor: '#327aff', endColor: 'skyblue' },
-            {scale: 10, quantity: 5, startColor: 'skyblue', endColor: 'skyblue' }
-              ]}
-                             />
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-                  <DeviceDataGauge
-                      Firebase={Firebase}
-                      classes={classes}
-                      name="Avg Brightness"
-                      icon={(<Icon>brightness_low</Icon>)}
-                      color="yellow"
-                      value={95}
-                      max={100}
-                      min={0}
-                      customUnit={SVGFETurbulenceElement}
-                      isCustom={false}
-                      isPercent={true}
-                      isDegree={false}
-                      isTemp={false}
-                      isNumber={false}
-                      scaleList={[
-                          { scale: 10, quantity: 5, startColor: '#000000', endColor: '#555555' },
-                          { scale: 10, quantity: 5, startColor: '#555555', endColor: 'orange' },
-                          { scale: 10, quantity: 5, startColor: 'orange', endColor: 'yellow' }
-                      ]}
-                  />
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-                  <DeviceDataGauge
-                      Firebase={Firebase}
-                      classes={classes}
-                      name="Live Temperature"
-                      icon={(<Icon>ac_unit</Icon>)}
-                      color="blue"
-                      value={75}
-                      max={110}
-                      min={-20}
-                      types={"temp"}
-                      customUnit={null}
-                      isCustom={false}
-                      isPercent={false}
-                      isDegree={false}
-                      isTemp={true}
-                      isNumber={false}
-                      scaleList={[
-                          { scale: 5, quantity: 5, startColor: '#327aff', endColor: '#327aff' },
-                          { scale: 5, quantity: 5, startColor: '#327aff', endColor: 'skyblue' },
-                          { scale: 10, quantity: 5, startColor: 'skyblue', endColor: 'skyblue' }
-                      ]}
-                  />
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-                  <DeviceDataGauge
-                      Firebase={Firebase}
-                      classes={classes}
-                      name="Overall Health"
-                      icon={(<Icon>healing</Icon>)}
-                      color="red"
-                      value={80}
-                      max={100}
-                      min={0}
-                      customUnit=" U"
-                      isCustom={true}
-                      isPercent={false}
-                      isDegree={false}
-                      isTemp={false}
-                      isNumber={false}
-                      scaleList={[
-                          { scale: 5, quantity: 5, startColor: '#327aff', endColor: '#327aff' },
-                          { scale: 5, quantity: 5, startColor: '#327aff', endColor: 'skyblue' },
-                          { scale: 10, quantity: 5, startColor: 'skyblue', endColor: 'skyblue' }
-                      ]}
-                  />
-        </GridItem>
-      </GridContainer>
-          <GridContainer>
-              <GridItem xs={12} sm={12} md={4}>
-                  <DeviceDataChart
-                      name="Actual Rain Fall"
-                      className="ct-chart"
-                      data={dailySalesChart.data}
-                      type="Line"
-                      options={dailySalesChart.options}
-                      listener={dailySalesChart.animation}
-                      classes={classes}
-                      icon={<Cloud />}
-                      amount="55%"
-                      message="Increase in rain fall over the last week."
-                  />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={4}>
-                  <DeviceDataChart
-                      name="Actual Rain Fall"
-                      className="ct-chart"
-                      data={dailySalesChart.data}
-                      type="Line"
-                      options={dailySalesChart.options}
-                      listener={dailySalesChart.animation}
-                      classes={classes}
-                      icon={<Cloud />}
-                      amount="55%"
-                      message="Increase in rain fall over the last week."
-                  />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={4}>
-                  <DeviceDataChart
-                      name="Actual Rain Fall"
-                      className="ct-chart"
-                      data={dailySalesChart.data}
-                      type="Line"
-                      options={dailySalesChart.options}
-                      listener={dailySalesChart.animation}
-                      classes={classes}
-                      icon={<Cloud />}
-                      amount="55%"
-                      message="Increase in rain fall over the last week."
-                  />
-              </GridItem>
-          </GridContainer>
-    </div>
-  );
+export default class Dashboard extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            moist: 0,
+            temp: 0,
+            heatIndex: 0,
+            humidity: 0,
+            other: 0
+        }
+
+        this.interval = null;
+       
+     
+
+
+    }
+
+    ticker = () => {
+
+        axios.get("/api/livedata").then(result => {
+         
+            let data = result.data[0]
+            console.log(data)
+            //{id: 1, timeStamp: "2019-09-01 04:37:52", moisture: 0, light: 0, sensorTempFehr: 27, …}
+            this.setGauges(data)
+           
+        }).catch(error => {
+            throw error
+        })
+
+      
+    }
+
+    messageCB = (message) => {
+        this.setGauges(message.data)
+    }
+
+    componentDidMount() {
+        this.interval =  setInterval(this.ticker, 1000);
+ 
+    }
+
+    setGauges = (data) => {
+        console.log(data)
+        let moist = (parseFloat(data.moisture) / 100) ;
+        let temp = parseInt(((parseFloat(data.sensorTempFehr) * (9 / 5)) + 32));
+        let heatIndex = parseFloat(data.precipIntensity) / 100
+        let humidity = parseFloat(data.humidity)
+        let other = parseFloat(data.windSpeed)
+        this.setState({
+            moist: moist,
+            temp: temp,
+            heatIndex: heatIndex,
+            humidity: humidity,
+            other: other
+        })
+
+    }
+    componentWillUnmount() {
+
+        clearInterval(this.interval);
+
+    }
+
+    render() {
+        const classes = makeStyles(styles);
+        let currentVal = parseInt(this.state.moist);
+        let hexColor = "#0000FF"
+        if (currentVal > 0) {
+            let mColor = ((1677200 / currentVal) * 100);
+             hexColor = "#" + mColor.toString(16);
+        }
+        return (
+            <div>
+                <GridContainer>
+                    <GridItem xs={12} sm={6} md={4}>
+                       
+                        <DeviceDataGauge
+                            classes={classes}
+                            name="Moisture"
+                            icon={<Cloud />}
+                            color="liteblue"
+                            gColor={hexColor}
+                            value={this.state.moist}
+                            max={100}
+                            min={0}
+                            customUnit={null}
+                            isCustom={false}
+                            isPercent={true}
+                            isDegree={false}
+                            isTemp={false}
+                            isNumber={false}
+                            
+                        />
+                    </GridItem>
+                    <GridItem xs={12} sm={6} md={4}>
+                        <DeviceDataGauge
+                           
+                            classes={classes}
+                            name="Humidity"
+                            icon={(<Icon>brightness_low</Icon>)}
+                            color="yellow"
+                            gColor="#ffee00"
+                            value={this.state.humidity}
+                            max={100}
+                            min={0}
+                            customUnit={""}
+                            isCustom={false}
+                            isPercent={true}
+                            isDegree={false}
+                            isTemp={false}
+                            isNumber={false}
+                            on={true}
+                        />
+                    </GridItem>
+                    <GridItem xs={12} sm={6} md={4}>
+                        <DeviceDataGauge
+                           
+                            classes={classes}
+                            name="Temp"
+                            icon={(<Icon>ac_unit</Icon>)}
+                            color="blue"
+                            on={true}
+                            value={this.state.temp}
+                            max={110}
+                            min={-20}
+                            types={"temp"}
+                            customUnit={null}
+                            isCustom={false}
+                            isPercent={false}
+                            isDegree={false}
+                            isTemp={true}
+                            isNumber={false}
+                            
+                        />
+                    </GridItem>
+                   
+                </GridContainer>
+                <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                        <DeviceDataChart
+                            name="History Analytics"
+                            style={{ backgroundColor: "green"}}
+                            data={dailyPlantData.data}
+                            type="Line"
+                            options={dailyPlantData.options}
+                            listener={dailyPlantData.animation}
+                            classes={classes}
+                            icon={<Cloud />}
+                            amount="5%"
+                            message="Rain vs. Soil Moisture"
+                        />
+                    </GridItem>
+                   
+                </GridContainer>
+            </div>
+        )
+    }
+
+  
+  
 }

@@ -264,7 +264,7 @@ const cardLink = {
 
 export {
   hexToRgb,
-  //variables
+  //variables,
   drawerWidth,
   transition,
   container,

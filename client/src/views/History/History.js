@@ -97,12 +97,12 @@ export default function TableList() {
         <GridContainer>
             <GridItem xs={12} sm={12} md={6}>
                 <CustomTabs
-                    title="Tasks:"
+                    title="To Do List"
                     headerColor="primary"
                     tabs={[
                         {
-                            tabName: "Bugs",
-                            tabIcon: BugReport,
+                            tabName: "Growth",
+                            tabIcon: null,
                             tabContent: (
                                 <Tasks
                                     checkedIndexes={[0, 3]}
@@ -112,8 +112,8 @@ export default function TableList() {
                             )
                         },
                         {
-                            tabName: "Website",
-                            tabIcon: Code,
+                            tabName: "Harvest",
+                            tabIcon: null,
                             tabContent: (
                                 <Tasks
                                     checkedIndexes={[0]}
@@ -123,7 +123,7 @@ export default function TableList() {
                             )
                         },
                         {
-                            tabName: "Server",
+                            tabName: "Weather Preparation",
                             tabIcon: Cloud,
                             tabContent: (
                                 <Tasks
@@ -145,13 +145,13 @@ export default function TableList() {
                     options={dailySalesChart.options}
                     listener={dailySalesChart.animation}
                     classes={classes}
-                    icon={<Cloud />}
+                    icon={(<Cloud />)}
                     amount="55%"
                     message="Increase in rain fall over the last week."
                 />
             </GridItem>
         </GridContainer>
-  
+
   </div>
             );
 }

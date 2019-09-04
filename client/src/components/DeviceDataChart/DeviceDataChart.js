@@ -31,41 +31,28 @@ export default class DeviceDataChart extends Component {
         this.state = {
             DeviceSensors: [],
             name: this.props.name,
-            color: this.colors[this.props.color],
+            color: "green",
             data: this.props.data,
             type: this.props.type,
             updateValue: this.props.updateValue
         }
 
     }
-    componentDidMount() {
-       
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-
-    
-    }
-
-    
-    doStateChange = () => {
-
-        
-
-    }
+   
     
     render() {
        
         return (
           
             <Card chart>
-                <CardHeader color={this.state.color}>
+                <CardHeader style={{ backgroundColor: "green" }}>
                     <ChartistGraph
+                        style={{ backgroundColor : "green" }}
                         className="ct-chart"
-                        data={this.state.data}
-                        type={this.state.type}
-                        options={this.state.options}
-                        listener={this.state.listener}
+                        data={this.props.data}
+                        type={this.props.type}
+                        options={this.props.options}
+                        listener={this.props.listener}
                     />
                 </CardHeader>
                 <CardBody>

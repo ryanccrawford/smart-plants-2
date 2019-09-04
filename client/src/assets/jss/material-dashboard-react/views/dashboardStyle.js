@@ -14,7 +14,7 @@ const dashboardStyle = {
     height: "16px"
   },
   stats: {
-    color: grayColor[0],
+    color: grayColor[3],
     display: "inline-flex",
     fontSize: "12px",
     lineHeight: "22px",
@@ -50,7 +50,7 @@ const dashboardStyle = {
     marginBottom: "0"
   },
   cardTitle: {
-    color: grayColor[2],
+    color: grayColor[0],
     marginTop: "0px",
     minHeight: "auto",
     fontWeight: "300",

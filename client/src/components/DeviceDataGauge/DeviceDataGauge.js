@@ -22,18 +22,15 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import ContainerDimensions from 'react-container-dimensions'
 //Gagues
-import Gauge from 'react-canvas-gauge';
-import { LinearGauge } from 'react-canvas-gauges';
+import Gauge from 'react-svg-gauge';
+import Switch from "react-switch";
 
 export default class DeviceDataGauge extends Component {
 
     constructor(props) {
         super(props)
-        this.Firebase = this.props.Firebase
-        this.updateTimer = null;
-        this.interval = this.props.interval || 1000
-        //this.dataSource = this.props.dataSource
         this.colors = {
             "yellow":"warning",
             "green":"success",
@@ -65,79 +62,34 @@ export default class DeviceDataGauge extends Component {
             isDegree: this.props.isDegree || false,
             isTemp: this.props.isTemp || false,
             isNumber: this.props.isNumber || true,
-            updateValue: this.props.updateValue,
-            types: this.props.types || "gauge"
+            types: this.props.types || "gauge",
+            on: true,
+            
         }
 
     }
-    componentDidMount() {
-        
-        //this.updateTimer = setTimeout(this.doStateChange, this.interval)
-       // this.getStateFromDatabase()
+    switchHandleChange = () => {
+        this.setState({ on: !this.state.on });
     }
+    valueFormatter = (value) => {
 
-    componentDidUpdate(prevProps, prevState) {
-
-        if (prevState !== this.state) {
-            this.setStateFromDatabase()
-        }
+         return value + " %" 
 
     }
 
-    setStateFromDatabase = () => {
-        this.Firebase.database().ref('/').set(this.state);
-        console.log('DATA SAVED');
+
+
+    percentFormatter = (value) => {
+
+        return (value + " %")
+                
     }
+    tempFormatter = (value) => {
 
-    getStateFromDatabase = () => {
-        let ref = this.Firebase.database().ref('/');
-        ref.on('value', snapshot => {
-            const state = snapshot.val();
-            this.setState(state);
-        });
-        console.log('DATA RETRIEVED');
-    }
-
-    doStateChange = () => {
-
-        
+        return (value + decodeURI('%C2%B0F'))
 
     }
 
-    handleTick = () => {
-        
-        let name = this.refs.name.value;
-        let value = this.refs.value.value;
-        let deviceId = this.refs.deviceId.value;
-
-        if (deviceId && name && value) {
-            const { DeviceSensors } = this.state;
-            const DeviceSensorsIndex = DeviceSensors.findIndex(data => {
-                return data.deviceId === deviceId
-            });
-            DeviceSensors[DeviceSensorsIndex].name = name;
-            DeviceSensors[DeviceSensorsIndex].value = value;
-            this.setState({ DeviceSensors });
-        }
-        else if (name && value) {
-            const deviceId = new Date().getTime().toString();
-            const { DeviceSensors } = this.state;
-            DeviceSensors.push({ deviceId, name, value })
-            this.setState({ DeviceSensors });
-        }
-
-        this.refs.deviceId.value = '';
-        this.refs.name.value = '';
-        this.refs.value.value = '';
-    }
-
-    updateData = (DeviceSensors) => {
-        this.refs.deviceId.value = DeviceSensors.deviceId;
-        this.refs.name.value = DeviceSensors.name;
-        this.refs.value.value = DeviceSensors.value;
-    }
-
-    
 
     render() {
         let unit = ""
@@ -156,65 +108,76 @@ export default class DeviceDataGauge extends Component {
         if (this.state.isCustom) {
             unit = " " + this.state.customUnit
         }
-        
-        const guageStyle = {
-            display: 'inline-block',
-            margin: '15px auto',
-            width: '150px',
-            height: '150px'
+
+        const valueStyle = {
+            fontSize: '2em'
         }
-        
+        const topStyle = {
+            fontSize: '3em'
+        }
+        let gColor = "";
+        if (parseInt(this.props.value) < 75) {
+            gColor = "#0000ff";
+        }
+        if (parseInt(this.props.value) >= 75 && parseInt(this.state.value) < 80) {
+            gColor = "#99ffff";
+        }
+        if (parseInt(this.props.value) >= 80 && parseInt(this.state.value) < 90) {
+            gColor = "#ffff00";
+        }
+        if (parseInt(this.props.value) >= 90) {
+            gColor = "#ff0000";
+        }
+      
         return (
-          
+
             <Card>
-                <CardHeader color={this.state.color} stats icon>
+                <CardHeader color={this.state.color} style={{ display: 'inline-block' }} stats icon>
                     <CardIcon color={this.state.color}>
-                        <Icon>{this.state.icon}</Icon>
-                    </CardIcon>
-                    
-                    <h3 className={this.props.classes.cardTitle}>
-                        {this.state.value} <small>{unit}</small>
-                    </h3><p className={this.props.classes.cardCategory}>{this.state.name}</p>
+                        <Icon>{this.props.icon}</Icon>
+                        <p style={{ display: 'inline-block', fontSize: '2em', fontWeight: '600', paddingRight: '10px', lineHeight : '-5em'}}>
+                            {this.state.name}</p>
+                    </CardIcon> 
+                   
                 </CardHeader>
                 <CardBody>
-                {this.state.types !== "temp" ? (
-                    <Gauge
-                    style={guageStyle}
-                    size={this.state.max}
-                    unit={unit}
-                    type={this.props.type}
-                    theme={"light"}
-                    gaugeSize={24}
-                    mode={this.state.type}
-                    minValue={this.state.min}
-                    value={this.state.value}
-                    scaleList={this.props.scaleList}
-                />) : (
-                        <LinearGauge
-                            width="100"
-                            height="250"
-                            borderRadius="20"
-                            units={unit}
-                            title='Temp'
-                            value={this.state.value}
-                            minValue={this.state.min}
-                            maxValue={this.state.max}
-                            majorTicks={['-10','0', '5', '15', '20', '25', '30', '35', '40', '45', '50', '60' , '70' , '80', '90', 100, 110]}
-                            minorTicks={2}
-                            ></LinearGauge>)}
+                   <ContainerDimensions>
+                        {({ width, height }) => (<Gauge 
+                            width={(width / 1.1 ).toString()}
+                            height={"300"}
+                            color={this.state.on ? gColor : "#222222"}
+                            label={""}
+                            max={this.props.max}
+                            min={this.props.min}
+                            value={this.state.on ? this.props.value : 0}
+                            valueLabelStyle={valueStyle}
+                            topLabelStyle={topStyle}
+                            valueFormatter={!this.props.isTemp ? this.percentFormatter : this.tempFormatter}
+                        />
+                        )
+                        }
+                            
+                  </ContainerDimensions>
                     </CardBody>
                 <CardFooter stats>
                     <div className={this.props.classes.stats}>
-                        <Danger>
-                            <Warning />
-                        </Danger>
-                        <a href="#pablo" onClick={e => e.preventDefault()}>
-                            Actions
-                </a>
+                        <label>
+                            <span>Connection</span>
+                            
+                       
+                        {this.state.on ? (
+                           <div><Icon>{"compare_arrows"}</Icon><span> Connected</span></div>
+                        ) : (
+                                <Danger>
+                                    <Warning /><span> Not Connected</span>
+                                </Danger>)
+                            }
+                            <span>OFF </span> <Switch onChange={this.switchHandleChange} checked={this.state.on ? "checked" : ""} /> <span> ON</span>
+                        </label>
                     </div>
                 </CardFooter>
             </Card>
-         
+
         )
 
 
