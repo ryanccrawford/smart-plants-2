@@ -27,11 +27,7 @@ import CustomTabs from "components/CustomTabs/CustomTabs.js";
 import Danger from "components/Typography/Danger.js";
 import DeviceDataGauge from "components/DeviceDataGauge/DeviceDataGauge.js";
 import DeviceDataChart from "components/DeviceDataChart/DeviceDataChart.js";
-import {
-    dailySalesChart,
-    emailsSubscriptionChart,
-    completedTasksChart
-} from "variables/charts.js";
+import dailyPlantData from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import axios from 'axios';
@@ -179,48 +175,21 @@ export default class Dashboard extends Component {
                    
                 </GridContainer>
                 <GridContainer>
-                    <GridItem xs={12} sm={12} md={4}>
+                    <GridItem xs={12} sm={12} md={12}>
                         <DeviceDataChart
-                            name="Actual Rain Fall"
-                            className="ct-chart"
-                            data={dailySalesChart.data}
+                            name="History Analytics"
+                            style={{ backgroundColor: "green"}}
+                            data={dailyPlantData.data}
                             type="Line"
-                            options={dailySalesChart.options}
-                            listener={dailySalesChart.animation}
+                            options={dailyPlantData.options}
+                            listener={dailyPlantData.animation}
                             classes={classes}
                             icon={<Cloud />}
-                            amount="55%"
-                            message="Increase in rain fall over the last week."
+                            amount="5%"
+                            message="Rain vs. Soil Moisture"
                         />
                     </GridItem>
-                    <GridItem xs={12} sm={12} md={4}>
-                        <DeviceDataChart
-                            name="Actual Rain Fall"
-                            className="ct-chart"
-                            data={dailySalesChart.data}
-                            type="Line"
-                            options={dailySalesChart.options}
-                            listener={dailySalesChart.animation}
-                            classes={classes}
-                            icon={<Cloud />}
-                            amount="55%"
-                            message="Increase in rain fall over the last week."
-                        />
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={4}>
-                        <DeviceDataChart
-                            name="Actual Rain Fall"
-                            className="ct-chart"
-                            data={dailySalesChart.data}
-                            type="Line"
-                            options={dailySalesChart.options}
-                            listener={dailySalesChart.animation}
-                            classes={classes}
-                            icon={<Cloud />}
-                            amount="55%"
-                            message="Increase in rain fall over the last week."
-                        />
-                    </GridItem>
+                   
                 </GridContainer>
             </div>
         )
