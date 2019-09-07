@@ -82,16 +82,26 @@ export default class Dashboard extends Component {
         console.log(data)
         let moist = (parseFloat(data.moisture) / 100) ;
         let temp = parseInt(((parseFloat(data.sensorTempFehr) * (9 / 5)) + 32));
-        let heatIndex = parseFloat(data.precipIntensity) / 100
+        let heatIndex = parseFloat(data.heatIndex) / 100
         let humidity = parseFloat(data.humidity)
         let other = parseFloat(data.windSpeed)
-        this.setState({
-            moist: moist,
-            temp: temp,
-            heatIndex: heatIndex,
-            humidity: humidity,
-            other: other
-        })
+      
+        let whatToUpdate = {}
+        if (moist !== this.state.moist) {
+            whatToUpdate.moist = moist
+        }
+        if (temp !== this.state.temp ) {
+            whatToUpdate.temp = temp
+        }
+        if (humidity !== this.state.humidity) {
+            whatToUpdate.humidity = humidity
+        }
+        if (other !== this.state.other) {
+            whatToUpdate.other = other
+        }
+        if (whatToUpdate === {}) return
+
+        this.setState(whatToUpdate)
 
     }
     componentWillUnmount() {
