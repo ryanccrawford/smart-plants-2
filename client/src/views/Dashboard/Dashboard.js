@@ -37,13 +37,18 @@ import WeatherAPI from "components/WeatherAPI/WeatherAPI.js"
 export default class Dashboard extends Component {
     constructor(props) {
         super(props)
+        this.user = {
+            email: "ryan@test.com",
+            devices: [],
 
+        }
         this.state = {
             moist: 0,
             temp: 0,
             heatIndex: 0,
             humidity: 0,
             other: 0
+
         }
 
         this.interval = null;
@@ -54,6 +59,18 @@ export default class Dashboard extends Component {
     }
 
     ticker = () => {
+
+
+        axios.get("/api/devices").then(result => {
+
+            let data = result.data[0]
+            console.log(data)
+            //{id: 1, timeStamp: "2019-09-01 04:37:52", moisture: 0, light: 0, sensorTempFehr: 27, …}
+            this.setGauges(data)
+
+        }).catch(error => {
+            throw error
+        })
 
         axios.get("/api/livedata").then(result => {
          
