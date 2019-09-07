@@ -1,6 +1,5 @@
 ﻿import React, { Component } from "react";
-// FIREBASE DATABASE
-import config from './config.js';
+
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
@@ -39,7 +38,7 @@ export default class Dashboard extends Component {
         super(props)
         this.user = {
             email: "ryan@test.com",
-            devices: [],
+            devices: [1],
 
         }
         this.state = {
@@ -59,19 +58,24 @@ export default class Dashboard extends Component {
     }
 
     ticker = () => {
+        getDevices = [];
+        if (this.user.devices) {
 
+            let numberOfDevices = this.user.devices.length
 
-        axios.get("/api/devices").then(result => {
+            for (let i = 0; i < numberOfDevices; i++) {
 
-            let data = result.data[0]
-            console.log(data)
-            //{id: 1, timeStamp: "2019-09-01 04:37:52", moisture: 0, light: 0, sensorTempFehr: 27, …}
-            this.setGauges(data)
+                
 
-        }).catch(error => {
-            throw error
-        })
+            }
 
+            this.user.devices
+               
+
+            
+
+        }
+       
         axios.get("/api/livedata").then(result => {
          
             let data = result.data[0]
@@ -205,15 +209,15 @@ export default class Dashboard extends Component {
                     <GridItem xs={12} sm={12} md={12}>
                         <DeviceDataChart
                             name="History Analytics"
-                            style={{ backgroundColor: "green"}}
-                            data={dailyPlantData.data}
+                            style={{ backgroundColor: "lightblue"}}
+                            data={ChartDataRainOverTime.data}
                             type="Line"
-                            options={dailyPlantData.options}
-                            listener={dailyPlantData.animation}
+                            options={ChartDataRainOverTime.options}
+                            //listener={ChartDataRainOverTime.animation}
                             classes={classes}
                             icon={<Cloud />}
                             amount="5%"
-                            message="Rain vs. Soil Moisture"
+                            message=" Rain Over TIme"
                         />
                     </GridItem>
                    

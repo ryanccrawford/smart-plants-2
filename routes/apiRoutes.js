@@ -202,9 +202,16 @@ module.exports = function (app) {
         }
     });
 
-    app.get("/api/livedata", function (req, res) {
+    app.get("/api/livedata/:id", function (req, res) {
+        let id = req.params.id;
+        let WHERE = "";
+        if (id) {
+            id = parseInt(id);
+            WHERE = ` WHERE Device.id=${id}`;
+        }
+
         let sqlQuery = "";
-            sqlQuery += "SELECT * FROM LiveStats";
+        sqlQuery += "SELECT * FROM LiveStats" + WHERE;
         sqlQuery += " ORDER BY timeStamp DESC LIMIT 1;";
 
         db.sequelize
