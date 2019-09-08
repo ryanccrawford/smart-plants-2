@@ -15,11 +15,10 @@ const subscriptionName = 'iot-subscription';
 
 const subscription = pubsub.subscription(subscriptionName);
 
-// Create an event handler to handle messages
 
 const messageHandler = message => {
- 
-   
+
+
     let m = message.data;
 
 
@@ -29,7 +28,7 @@ const messageHandler = message => {
         let items = m.toString().split(",");
 
         let dataMessage = {
-            
+
             moisture: items[2],
             light: 0,
             sensorTempFehr: items[0],
@@ -52,32 +51,9 @@ const messageHandler = message => {
     }
 };
 
-// Listen for new messages until timeout is hit
+
+
 subscription.on(`message`, messageHandler);
-
-const deleteData = () => {
-    let sqlQuery = "";
-    sqlQuery += "SELECT * FROM LiveStats";
-    sqlQuery += " ORDER BY timeStamp DESC LIMIT 1;";
-
-    db.sequelize
-        .query(sqlQuery, { type: db.sequelize.QueryTypes.SELECT })
-        .then(function (data) {
-            let lastRowId = data[0].id;
-            db.LiveStats.destroy({
-                where: { id: { $notIn: [lastRowId] } }
-            }).catch(function (err) {
-                console.log(err);
-            });
-        })
-        .catch(function (err) {
-            console.log(err);
-        });
-
-};
-
-
-setInterval(deleteData, 60000);
 
 
 
@@ -207,23 +183,89 @@ module.exports = function (app) {
         let WHERE = "";
         if (id) {
             id = parseInt(id);
-            WHERE = ` WHERE Device.id=${id}`;
+            WHERE = ` WHERE DeviceId=${id}`;
         }
 
-        let sqlQuery = "";
-        sqlQuery += "SELECT * FROM LiveStats" + WHERE;
-        sqlQuery += " ORDER BY timeStamp DESC LIMIT 1;";
-
+        let Query = "";
+        Query += "SELECT * FROM LiveStats" + WHERE;
+        Query += " ORDER BY timeStamp DESC LIMIT 1;";
         db.sequelize
-            .query(sqlQuery, { type: db.sequelize.QueryTypes.SELECT })
+            .query(Query, { type: db.sequelize.QueryTypes.SELECT })
             .then(function (data) {
-                console.log(data);
-                res.json(data);
+                let lastRowId = data[0].id;
+                console.log("lastrow Id = " + lastRowId);
+                db.LiveStats.destroy({
+                    where: { id: { $notIn: [lastRowId] } }
+                }).then(() => {
+
+                    let sqlQuery = "";
+                    sqlQuery += "SELECT * FROM LiveStats" + WHERE;
+                    sqlQuery += " ORDER BY timeStamp DESC LIMIT 1;";
+
+                    db.sequelize
+                        .query(sqlQuery, { type: db.sequelize.QueryTypes.SELECT })
+                        .then(function (data) {
+                            console.log(data);
+                            res.json(data);
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                            res.status(400).end();
+                        });
+
+
+                }).catch(function (err) {
+                    console.log(err);
+                });
             })
             .catch(function (err) {
                 console.log(err);
-                res.status(400).end();
             });
+
+
+
+        
+    });
+
+    app.get("/api/livedatacloud/:id", function (req, res) {
+        let id = req.params.id;
+        let WHERE = "";
+        if (id) {
+            id = parseInt(id);
+        }
+
+        subscription.on(`message`, (message) => {
+            console.log(message);
+            let m = message.data;
+
+
+            if (message.data.length > 0) {
+                console.log(m.toString());
+
+                let items = m.toString().split(",");
+
+                let dataMessage = {
+
+                    moisture: items[2],
+                    light: 0,
+                    sensorTempFehr: items[0],
+                    weatherTemp: 0.00,
+                    precipIntensity: items[4],
+                    humidity: items[1],
+                    windSpeed: items[3],
+                    isWatering: 0,
+                    DeviceId: 3
+                };
+
+                console.log(dataMessage);
+                res.json(dataMessage);
+                message.ack();
+
+            }
+        }).catch((error) => { console.log(error); res.json(error)});
+        
+                
+          
     });
 
     app.get("*", (req, res) => {

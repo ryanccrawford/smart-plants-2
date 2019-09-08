@@ -1,9 +1,9 @@
-var Chartist = require("chartist");
+const Chartist = require("chartist");
 
 //animation Vars
-var delays = 80,
+let delays = 80,
   durations = 500;
-var delays2 = 80,
+let delays2 = 80,
   durations2 = 500;
 
 const ChartDataRainOverTime = {

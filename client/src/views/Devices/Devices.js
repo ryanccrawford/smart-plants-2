@@ -9,7 +9,6 @@ import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-
 import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
 import CardFooter from "components/Card/CardFooter";
 
@@ -17,7 +16,7 @@ const useStyles = makeStyles(styles);
 
 export default function Devices(props) {
     const classes = useStyles();
-
+    console.log(props.devices);
   return (
       <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
