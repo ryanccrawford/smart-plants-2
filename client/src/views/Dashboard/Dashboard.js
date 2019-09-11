@@ -1,6 +1,5 @@
 ﻿import React, { Component } from "react";
-// FIREBASE DATABASE
-import config from './config.js';
+
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
@@ -27,7 +26,7 @@ import CustomTabs from "components/CustomTabs/CustomTabs.js";
 import Danger from "components/Typography/Danger.js";
 import DeviceDataGauge from "components/DeviceDataGauge/DeviceDataGauge.js";
 import DeviceDataChart from "components/DeviceDataChart/DeviceDataChart.js";
-import dailyPlantData from "variables/charts.js";
+import ChartData from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import axios from 'axios';
@@ -37,13 +36,25 @@ import WeatherAPI from "components/WeatherAPI/WeatherAPI.js"
 export default class Dashboard extends Component {
     constructor(props) {
         super(props)
+        this.user = {
+            email: "ryan@test.com",
+            devices: [3],
 
+        }
+        let devices = []
+        for (let i = 0; i < this.user.devices.length; i++) {
+            console.log("adding " + i)
+            devices.push({
+               DeviceId: this.user.devices[i],
+               moist: 0,
+               temp: 0,
+               heatIndex: 0,
+               humidity: 0,
+               other: 0
+            })
+        }
         this.state = {
-            moist: 0,
-            temp: 0,
-            heatIndex: 0,
-            humidity: 0,
-            other: 0
+            device: devices
         }
 
         this.interval = null;
@@ -54,19 +65,26 @@ export default class Dashboard extends Component {
     }
 
     ticker = () => {
+        
+        if (this.user.devices) {
 
-        axios.get("/api/livedata").then(result => {
-         
-            let data = result.data[0]
-            console.log(data)
-            //{id: 1, timeStamp: "2019-09-01 04:37:52", moisture: 0, light: 0, sensorTempFehr: 27, …}
-            this.setGauges(data)
-           
-        }).catch(error => {
-            throw error
-        })
+            let numberOfDevices = this.user.devices.length
 
-      
+            for (let i = 0; i < numberOfDevices; i++) {
+                let did = this.user.devices[i]
+                let url = `/api/livedata/${did}`
+                axios.get(url).then(result => {
+                  
+                                   
+                    //{id: 1, timeStamp: "2019-09-01 04:37:52", moisture: 0, light: 0, sensorTempFehr: 27, …}
+                        this.setGauges(result.data[0], did)
+
+                }).catch(error => {
+                    throw error
+                })
+
+            }
+        }
     }
 
     messageCB = (message) => {
@@ -75,23 +93,34 @@ export default class Dashboard extends Component {
 
     componentDidMount() {
         this.interval =  setInterval(this.ticker, 1000);
- 
     }
 
-    setGauges = (data) => {
+    setGauges = (data, id) => {
+        console.log("set guages");
         console.log(data)
         let moist = (parseFloat(data.moisture) / 100) ;
         let temp = parseInt(((parseFloat(data.sensorTempFehr) * (9 / 5)) + 32));
-        let heatIndex = parseFloat(data.precipIntensity) / 100
+        let heatIndex = parseFloat(data.heatIndex) / 100
         let humidity = parseFloat(data.humidity)
         let other = parseFloat(data.windSpeed)
-        this.setState({
+
+        let tempState = this.state.device.filter((device, index) => {
+            if (device.DeviceId && device.DeviceId === id) {
+                return false;
+            }
+            return true;
+        })
+
+        let stateItem = {
             moist: moist,
             temp: temp,
-            heatIndex: heatIndex,
             humidity: humidity,
-            other: other
-        })
+            other: other,
+            DeviceId: id
+        }
+        tempState.push(stateItem);
+        console.log(tempState);
+        this.setState({ device: tempState})
 
     }
     componentWillUnmount() {
@@ -119,7 +148,7 @@ export default class Dashboard extends Component {
                             icon={<Cloud />}
                             color="liteblue"
                             gColor={hexColor}
-                            value={this.state.moist}
+                            value={this.state.device[0].moist}
                             max={100}
                             min={0}
                             customUnit={null}
@@ -139,7 +168,7 @@ export default class Dashboard extends Component {
                             icon={(<Icon>brightness_low</Icon>)}
                             color="yellow"
                             gColor="#ffee00"
-                            value={this.state.humidity}
+                            value={this.state.device[0].humidity}
                             max={100}
                             min={0}
                             customUnit={""}
@@ -159,7 +188,7 @@ export default class Dashboard extends Component {
                             icon={(<Icon>ac_unit</Icon>)}
                             color="blue"
                             on={true}
-                            value={this.state.temp}
+                            value={this.state.device[0].temp}
                             max={110}
                             min={-20}
                             types={"temp"}
@@ -178,15 +207,15 @@ export default class Dashboard extends Component {
                     <GridItem xs={12} sm={12} md={12}>
                         <DeviceDataChart
                             name="History Analytics"
-                            style={{ backgroundColor: "green"}}
-                            data={dailyPlantData.data}
+                            style={{ backgroundColor: "lightblue"}}
+                            data={ChartData.ChartDataRainOverTime.data}
                             type="Line"
-                            options={dailyPlantData.options}
-                            listener={dailyPlantData.animation}
+                            options={ChartData.ChartDataRainOverTime.options}
+                            listener={ChartData.ChartDataRainOverTime.animation}
                             classes={classes}
                             icon={<Cloud />}
                             amount="5%"
-                            message="Rain vs. Soil Moisture"
+                            message=" Rain Over TIme"
                         />
                     </GridItem>
                    
