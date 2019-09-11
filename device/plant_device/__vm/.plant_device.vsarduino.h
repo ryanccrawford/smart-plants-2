@@ -104,6 +104,6 @@ typedef long pthread_cond_t;
 #define interrupts() sei()
 #define noInterrupts() cli()
 
-#include "device-code.ino"
+#include "plant_device.ino"
 #endif
 #endif

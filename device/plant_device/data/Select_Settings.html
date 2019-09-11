@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta content="text/html; charset=ISO-8859-1"
+          http-equiv="content-type">
+    <meta name="viewport" content="width = device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Configure WiFi Server Settings - Smart Plants 2 - Smart Device</title>
+</head>
+<body style="background-color:#9cadb9;">
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">Smart Plants 2 - Device Setup</h1>
+            <p class="lead">Configure WiFi Server Settings</p>
+        </div>
+
+        <form method="post">
+            <div id="radio_select">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="configure" value="dhcp" id="radio_dhcp" checked>
+                    <label class="form-check-label" for="radio_dhcp" data-toggle="tooltip" data-placement="top" title="Select this option to use DHCP or automatic settings.">
+                        Use Automatic (DHCP - Select this if you are unsure)
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="configure" value="staticIP" id="radio_static">
+                    <label class="form-check-label" for="radio_static" data-toggle="tooltip" data-placement="top" title="Select this to set you IP address settings manually.">
+                        Use Manual Settings (Static IP - Advanced)
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" id="save" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Save Your Settings">Save</button>
+
+
+
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+
+    <script>
+        var rate_value;
+        $(document).ready(function () {
+            $("#save").on("click", (event) => {
+
+                if ($('#radio_dhcp').is(':checked')) {
+
+                    rate_value = $('#radio_dhcp').val();
+
+                    window.location.assign("/dhcp");
+                } else if ($('#radio_static').is(':checked')) {
+                    rate_value = $('#radio_static').val();
+
+                    window.location.assign("/static");
+                }
+                return false;
+            }
+            )
+        })
+    </script>
+</body>

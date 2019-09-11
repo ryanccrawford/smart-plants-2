@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+    <meta name="viewport" content="width = device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Connect Device Settings - Smart Plants 2 - Smart Device</title>
+</head>
+<body style="background-color:#9cadb9;">
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">Smart Plants 2 - Device Setup</h1>
+            <p class="lead">Let's Connect Your Device</p>
+        </div>
+            <form action="/" method="post">
+                <div class="form-group">
+                    <label for="ssid_wifi" data-toggle="tooltip" data-placement="top" title="Your WiFi SSID">SSID</label>
+                    <input class="form-control form-control-lg" maxlength="30" type='text' id="ssid_wifi" name="ssid">
+                    <small id="ssid_wifiHelp" class="form-text text-muted">This is the name of your wifi network or your router.</small>
+                </div>
+                <div class="form-group">
+                    <label for="pass_wifi" data-toggle="tooltip" data-placement="top" title="Your WiFi Password">PASSWORD</label>
+                    <input class="form-control form-control-lg" maxlength="30" type="text" id="pass_wifi" name="passkey">
+                    <small id="pass_wifiHelp" class="form-text text-muted">Enter the password you use to connect to your wifi router</small>
+                </div>
+                <div class="form-group form-check">
+                    <input id="ip_settings" type="checkbox" name="configure" value="change">
+                    <label class="form-check-label" for="ip_settings" data-toggle="tooltip" data-placement="top" title="Check This Box To Update IP Settings">Change IP Settings</label>
+                </div>
+                <button type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Click Here To Save Settings">Save</button>
+            </form>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
+</body>
+</html>

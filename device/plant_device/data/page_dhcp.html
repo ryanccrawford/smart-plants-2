@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta content="text/html; charset=ISO-8859-1"
+          http-equiv="content-type">
+    <meta name="viewport" content="width = device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>DHCP Server Settings - Smart Plants 2 - Smart Device</title>
+</head>
+<body style="background-color:#9cadb9;">
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">Smart Plants 2 - Device Setup</h1>
+            <p class="lead">Configure DHCP Settings</p>
+        </div>
+     </div>
+     <div class="container">
+            <form action="/" method="post">
+                <div class="form-group">
+                    <label for="ipv4" data-toggle="tooltip" data-placement="top" title="Select The IP Address">IPv4 Address</label>
+                    <input class="form-control form-control-lg" maxlength="30" type='text' id="ipv4" name="ipv4" placeholder="192.168.4.1">
+                    <small id="ipv4Help" class="form-text text-muted">IPv4 Address</small>
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" name="configure" id="useDefault" value="192.168.4.1" checked>
+                    <label class="form-check-label" for="useDefault" data-toggle="tooltip" data-placement="top" title="Check This Box To Use Default IP address">Use Default</label>
+                </div>
+                <button type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Click Here To Save Settings">Save</button>
+            </form>
+      </div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
+</body>
+</html>
