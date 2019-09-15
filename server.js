@@ -9,7 +9,7 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-
+//import database models
 let db = require("./models");
 
 app.use(cors());
@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
-//app.use(express.static("routes"));
+app.use(express.static("routes"));
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
     app.use(express.static("client/build"));
@@ -36,8 +36,8 @@ if (process.env.NODE_ENV === "test") {
 }
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.use(function (req, res, next) {
+    next(createError(404));
 });
 
 
