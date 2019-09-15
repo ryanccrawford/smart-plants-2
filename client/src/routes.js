@@ -1,7 +1,9 @@
 /*
+ * Main dashboard theme originally Designed by Creative Tim
  * 
- * This is the main dashboard routes, icons and header names
- * 
+ * This is the main dashboard routes data, icons and header names: could come from a database once in production
+ * Smart Plants 2 - React Dashboard
+ * Author: Ryan Crawford
  * 
  * 
 */
