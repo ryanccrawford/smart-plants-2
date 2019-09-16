@@ -39,7 +39,7 @@ const messageHandler = (message) => {
             humidity: items[1],
             windSpeed: 0,
             isWatering: 0,
-            DeviceId: 3
+            DeviceId: 1
         };
 
         db.LiveStats.create(dataMessage)
