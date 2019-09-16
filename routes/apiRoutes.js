@@ -37,7 +37,8 @@ const messageHandler = message => {
             precipIntensity: items[4],
             humidity: items[1],
             windSpeed: items[3],
-            isWatering: 0
+            isWatering: 0,
+            DeviceId: 1
         };
         message.ack();
         db.LiveStats.create(dataMessage)
