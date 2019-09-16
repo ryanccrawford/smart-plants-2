@@ -187,7 +187,7 @@ module.exports = function (app) {
         let WHERE = "";
         if (id) {
             id = parseInt(id);
-            WHERE = ` WHERE DeviceId=${id}`;
+            WHERE = ``;
         }
 
         let Query = "";
@@ -233,7 +233,7 @@ module.exports = function (app) {
                     humidity: items[1],
                     windSpeed: items[3],
                     isWatering: 0,
-                    DeviceId: 3
+                    DeviceId: 1
                 };
 
                 console.log(dataMessage);
