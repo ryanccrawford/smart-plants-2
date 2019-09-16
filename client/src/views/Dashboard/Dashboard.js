@@ -44,7 +44,7 @@ export default class Dashboard extends Component {
         super(props)
         this.user = {
             email: "ryan@test.com",
-            devices: [3],
+            devices: [1],
 
         }
         let devices = []
