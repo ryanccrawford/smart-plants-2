@@ -11,7 +11,7 @@ import "./assets/css/material-dashboard-react.css?v=1.8.0";
 const history = createBrowserHistory();
 
 ReactDOM.render(
-    <Router history={history}>
+    <Router history={history} >
         <Switch>
             <Route path="/admin" component={Admin} />
             <Redirect from="/" to="/admin/dashboard" />

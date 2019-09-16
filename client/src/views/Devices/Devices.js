@@ -17,34 +17,34 @@ const useStyles = makeStyles(styles);
 export default function Devices(props) {
     const classes = useStyles();
     console.log(props.devices);
-  return (
-      <GridContainer>
-          <GridItem xs={12} sm={12} md={12}>
-              <Card>
-                  <CardHeader color="primary">
-                      <h4>Smart Plants 2 Devices</h4>
-                      <p>Config, Add and Remove Devices.</p>
-                  </CardHeader>
-                  <CardBody></CardBody>
-                  <CardFooter></CardFooter>
-              </Card>
-          </GridItem>
-          {props.devices ? props.devices.map((index, device) => {
+    return (
+        <GridContainer>
+            <GridItem xs={12} sm={12} md={12}>
+                <Card>
+                    <CardHeader color="primary">
+                        <h4>Smart Plants 2 Devices</h4>
+                        <p>Config, Add and Remove Devices.</p>
+                    </CardHeader>
+                    <CardBody></CardBody>
+                    <CardFooter></CardFooter>
+                </Card>
+            </GridItem>
+            {props.devices ? props.devices.map((index, device) => {
 
 
-              return (
+                return (
 
-                  <GridItem xs={12} sm={6} md={4}>
-                      <Card>
-                          <CardHeader color="primary"></CardHeader>
-                          <CardBody></CardBody>
-                          <CardFooter></CardFooter>
-                      </Card>
-                  </GridItem>
-             )
+                    <GridItem xs={12} sm={6} md={4}>
+                        <Card>
+                            <CardHeader color="primary"></CardHeader>
+                            <CardBody></CardBody>
+                            <CardFooter></CardFooter>
+                        </Card>
+                    </GridItem>
+                )
 
-          }) : (null)}
-         
-    </GridContainer>
-  );
+            }) : (null)}
+
+        </GridContainer>
+    );
 }

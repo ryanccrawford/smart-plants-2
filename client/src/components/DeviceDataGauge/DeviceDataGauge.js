@@ -32,25 +32,25 @@ export default class DeviceDataGauge extends Component {
     constructor(props) {
         super(props)
         this.colors = {
-            "yellow":"warning",
-            "green":"success",
-            "red":"danger",
-            "liteblue":"info",
-            "blue":"primary",
-            "litered":"rose",
+            "yellow": "warning",
+            "green": "success",
+            "red": "danger",
+            "liteblue": "info",
+            "blue": "primary",
+            "litered": "rose",
             "white": "white"
         }
         let c = ""
         if (this.props.color.startsWith("#")) {
             c = this.props.color
         } else {
-           c = this.colors[this.props.color]
+            c = this.colors[this.props.color]
         }
         this.state = {
             DeviceSensors: [],
             name: this.props.name,
             icon: this.props.icon,
-            color: c ,
+            color: c,
             value: this.props.value,
             stopTimer: this.props.stopTimer || false,
             timerIsRunning: this.props.timerIsRunning || false,
@@ -64,7 +64,7 @@ export default class DeviceDataGauge extends Component {
             isNumber: this.props.isNumber || true,
             types: this.props.types || "gauge",
             on: true,
-            
+
         }
 
     }
@@ -73,7 +73,7 @@ export default class DeviceDataGauge extends Component {
     }
     valueFormatter = (value) => {
 
-         return value + " %" 
+        return value + " %"
 
     }
 
@@ -82,7 +82,7 @@ export default class DeviceDataGauge extends Component {
     percentFormatter = (value) => {
 
         return (value + " %")
-                
+
     }
     tempFormatter = (value) => {
 
@@ -128,22 +128,22 @@ export default class DeviceDataGauge extends Component {
         if (parseInt(this.props.value) >= 90) {
             gColor = "#ff0000";
         }
-      
+        console.log(this.props.value)
         return (
 
             <Card>
                 <CardHeader color={this.state.color} style={{ display: 'inline-block' }} stats icon>
                     <CardIcon color={this.state.color}>
                         <Icon>{this.props.icon}</Icon>
-                        <p style={{ display: 'inline-block', fontSize: '2em', fontWeight: '600', paddingRight: '10px', lineHeight : '-5em'}}>
+                        <p style={{ display: 'inline-block', fontSize: '2em', fontWeight: '600', paddingRight: '10px', lineHeight: '-5em' }}>
                             {this.state.name}</p>
-                    </CardIcon> 
-                   
+                    </CardIcon>
+
                 </CardHeader>
                 <CardBody>
-                   <ContainerDimensions>
-                        {({ width, height }) => (<Gauge 
-                            width={(width / 1.1 ).toString()}
+                    <ContainerDimensions>
+                        {({ width, height }) => (<Gauge
+                            width={(width / 1.1).toString()}
                             height={"300"}
                             color={this.state.on ? gColor : "#222222"}
                             label={""}
@@ -156,21 +156,21 @@ export default class DeviceDataGauge extends Component {
                         />
                         )
                         }
-                            
-                  </ContainerDimensions>
-                    </CardBody>
+
+                    </ContainerDimensions>
+                </CardBody>
                 <CardFooter stats>
                     <div className={this.props.classes.stats}>
                         <label>
                             <span>Connection</span>
-                            
-                       
-                        {this.state.on ? (
-                           <div><Icon>{"compare_arrows"}</Icon><span> Connected</span></div>
-                        ) : (
-                                <Danger>
-                                    <Warning /><span> Not Connected</span>
-                                </Danger>)
+
+
+                            {this.state.on ? (
+                                <div><Icon>{"compare_arrows"}</Icon><span> Connected</span></div>
+                            ) : (
+                                    <Danger>
+                                        <Warning /><span> Not Connected</span>
+                                    </Danger>)
                             }
                             <span>OFF </span> <Switch onChange={this.switchHandleChange} checked={this.state.on ? "checked" : ""} /> <span> ON</span>
                         </label>

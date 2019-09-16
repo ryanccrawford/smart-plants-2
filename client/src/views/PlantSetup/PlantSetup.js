@@ -32,13 +32,13 @@ class PlantSetup extends Component {
             plantData: null,
             selectedIndex: 0,
             plantDetails: null,
-            plants:[]
+            plants: []
         }
         console.log(this.server)
     }
 
     componentDidMount() {
-        this.setState({ plantNameTyped: "" ,selectedIndex: 0})
+        this.setState({ plantNameTyped: "", selectedIndex: 0 })
 
     }
     componentDidUpdate() {
@@ -52,7 +52,7 @@ class PlantSetup extends Component {
 
 
     handleChange = (e) => {
-       // e.preventDefault();
+        // e.preventDefault();
         this.setState({ plantNameTyped: e.target.value });
 
     }
@@ -65,7 +65,7 @@ class PlantSetup extends Component {
 
     lookUpPlant = () => {
 
-        this.setState({ isLoading: true },this.processPlant)
+        this.setState({ isLoading: true }, this.processPlant)
 
     }
 
@@ -91,30 +91,30 @@ class PlantSetup extends Component {
 
         return (
             <GridItem xs={12} sm={12} md={4}>
-            <Card profile>
-                {data.images ? (
-                    <CardAvatar profile >
-                        <img src={data.images[0].url} alt="..." />
-                    </CardAvatar >
-                ) : (null)}
+                <Card profile>
+                    {data.images ? (
+                        <CardAvatar profile >
+                            <img src={data.images[0].url} alt="..." />
+                        </CardAvatar >
+                    ) : (null)}
 
-                <CardBody profile>
-                    <h6>{data.main_species.common_name ? data.main_species.common_name.toUpperCase() : (<em>{data.scientific_name.toUpperCase()}</em>)}</h6>
-                    {data.main_species.common_name ? (<h4><em>{data.scientific_name.toLowerCase()}</em></h4>) : (null)}
-                    <p>
-                        Testing
+                    <CardBody profile>
+                        <h6>{data.main_species.common_name ? data.main_species.common_name.toUpperCase() : (<em>{data.scientific_name.toUpperCase()}</em>)}</h6>
+                        {data.main_species.common_name ? (<h4><em>{data.scientific_name.toLowerCase()}</em></h4>) : (null)}
+                        <p>
+                            Testing
                             </p>
-                    <Button
-                        color="primary"
-                        round
-                        name={data.id}
-                        onClick={this.handleListItemClick}
-                    >
-                        Select
+                        <Button
+                            color="primary"
+                            round
+                            name={data.id}
+                            onClick={this.handleListItemClick}
+                        >
+                            Select
                                      </Button>
-                </CardBody>
-            </Card>
-        </GridItem>)
+                    </CardBody>
+                </Card>
+            </GridItem>)
     }
 
     processPlant = () => {
@@ -136,22 +136,22 @@ class PlantSetup extends Component {
         return (
             <Container maxWidth="sm">
 
-            <div>
-                <ImageCapture
-                    processPlant={this.processPlant}
-                />
-                    <span style={{ textAlign: "center" }}>Or</span>
-                <FormControl>
-                    <TextField
-                        className="active"
-                    id="plant-name-typed"
-                    l
-                    value={this.state.plantNameTyped}
-                    onChange={this.handleChange}
-                    margin="normal"
+                <div>
+                    <ImageCapture
+                        processPlant={this.processPlant}
                     />
-                    <br/>
-                    <button onClick={this.handleSubmit}>Find</button>
+                    <span style={{ textAlign: "center" }}>Or</span>
+                    <FormControl>
+                        <TextField
+                            className="active"
+                            id="plant-name-typed"
+                            l
+                            value={this.state.plantNameTyped}
+                            onChange={this.handleChange}
+                            margin="normal"
+                        />
+                        <br />
+                        <button onClick={this.handleSubmit}>Find</button>
                     </FormControl>
                     <GridContainer>
                         {this.state.plants.map((item, index) => {
@@ -160,8 +160,8 @@ class PlantSetup extends Component {
 
                         })}
                     </GridContainer>
-                {this.state.isLoading ? (
-                    <CircularProgress className={"progress"} color="secondary" />
+                    {this.state.isLoading ? (
+                        <CircularProgress className={"progress"} color="secondary" />
                     ) : (null)}
                 </div>
             </Container>

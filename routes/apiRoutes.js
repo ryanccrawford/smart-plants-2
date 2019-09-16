@@ -7,19 +7,21 @@ const vision = require('@google-cloud/vision');
 const { PubSub } = require('@google-cloud/pubsub');
 const path = require('path');
 const db = require("../models");
+const weather = require('weather-js');
 
 // Creates a client
 const pubsub = new PubSub();
-
+// The IoT subscription Name
 const subscriptionName = 'iot-subscription';
-
+// subcribe to the sub
 const subscription = pubsub.subscription(subscriptionName);
 
-
-const messageHandler = message => {
+// Handler for sub messages
+const messageHandler = (message) => {
 
 
     let m = message.data;
+
 
 
     if (message.data.length > 0) {
@@ -32,13 +34,14 @@ const messageHandler = message => {
             moisture: items[2],
             light: 0,
             sensorTempFehr: items[0],
-            weatherTemp: 0.00,
+            weatherTemp: 0,
             precipIntensity: items[4],
             humidity: items[1],
-            windSpeed: items[3],
-            isWatering: 0
+            windSpeed: 0,
+            isWatering: 0,
+            DeviceId: 3
         };
-        message.ack();
+
         db.LiveStats.create(dataMessage)
             .then((data) => {
                 console.log(data);
@@ -49,6 +52,7 @@ const messageHandler = message => {
 
             });
     }
+
 };
 
 
@@ -78,7 +82,7 @@ module.exports = function (app) {
             axios.get(endPoint).then(result => {
                 res.json(result.data);
             }).catch(error => {
-               res.status(401).json(error);
+                res.status(401).json(error);
             });
 
         } else {
@@ -191,40 +195,15 @@ module.exports = function (app) {
         Query += " ORDER BY timeStamp DESC LIMIT 1;";
         db.sequelize
             .query(Query, { type: db.sequelize.QueryTypes.SELECT })
-            .then(function (data) {
-                let lastRowId = data[0].id;
-                console.log("lastrow Id = " + lastRowId);
-                db.LiveStats.destroy({
-                    where: { id: { $notIn: [lastRowId] } }
-                }).then(() => {
+            .then((data) => {
 
-                    let sqlQuery = "";
-                    sqlQuery += "SELECT * FROM LiveStats" + WHERE;
-                    sqlQuery += " ORDER BY timeStamp DESC LIMIT 1;";
-
-                    db.sequelize
-                        .query(sqlQuery, { type: db.sequelize.QueryTypes.SELECT })
-                        .then(function (data) {
-                            console.log(data);
-                            res.json(data);
-                        })
-                        .catch(function (err) {
-                            console.log(err);
-                            res.status(400).end();
-                        });
-
-
-                }).catch(function (err) {
-                    console.log(err);
-                });
+                console.log(data);
+                res.json(data);
             })
             .catch(function (err) {
                 console.log(err);
+                res.status(400).end();
             });
-
-
-
-        
     });
 
     app.get("/api/livedatacloud/:id", function (req, res) {
@@ -262,10 +241,26 @@ module.exports = function (app) {
                 message.ack();
 
             }
-        }).catch((error) => { console.log(error); res.json(error)});
-        
-                
-          
+        }).catch((error) => { console.log(error); res.json(error) });
+
+
+
+    });
+
+    app.get("/api/liveweather/:location", function (req, res) {
+
+        let location = req.params.location || "32972";
+        weather.find({ search: location, degreeType: 'F' }, (err, result) => {
+            if (err) {
+                console.log(err);
+
+            }
+
+            let js = JSON.stringify(result, null, 2);
+            console.log(js);
+            res.json(result);
+        });
+
     });
 
     app.get("*", (req, res) => {
@@ -273,8 +268,3 @@ module.exports = function (app) {
     });
 
 };
-
-
-
-
-

@@ -19,12 +19,12 @@ export default class DeviceDataChart extends Component {
         this.IconProp = this.props.icon
         //this.dataSource = this.props.dataSource
         this.colors = {
-            "yellow":"warning",
-            "green":"success",
-            "red":"danger",
-            "liteblue":"info",
-            "blue":"primary",
-            "litered":"rose",
+            "yellow": "warning",
+            "green": "success",
+            "red": "danger",
+            "liteblue": "info",
+            "blue": "primary",
+            "litered": "rose",
             "white": "white"
         }
 
@@ -38,16 +38,16 @@ export default class DeviceDataChart extends Component {
         }
 
     }
-   
-    
+
+
     render() {
-       
+
         return (
-          
+
             <Card chart>
                 <CardHeader style={{ backgroundColor: "green" }}>
                     <ChartistGraph
-                        style={{ backgroundColor : "green" }}
+                        style={{ backgroundColor: "green" }}
                         className="ct-chart"
                         data={this.props.data}
                         type={this.props.type}
@@ -60,17 +60,17 @@ export default class DeviceDataChart extends Component {
                     <p className={this.props.classes.cardCategory}>
                         <span className={this.props.classes.successText}>
                             <ArrowUpward className={this.props.classes.upArrowCardCategory} /> {this.props.amount}
-                </span>{this.props.message}
-                        
-              </p>
+                        </span>{this.props.message}
+
+                    </p>
                 </CardBody>
                 <CardFooter chart>
                     <div className={this.props.classes.stats}>
                         {this.props.IconProp} {this.props.message}
-              </div>
+                    </div>
                 </CardFooter>
             </Card>
-         
+
         )
 
 

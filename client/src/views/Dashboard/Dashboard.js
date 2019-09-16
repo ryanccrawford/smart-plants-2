@@ -1,8 +1,13 @@
 ﻿import React, { Component } from "react";
-
-// @material-ui/core
-import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
+// @material-ui/core
+import Card from "components/Card/Card.js";
+import CardHeader from "components/Card/CardHeader.js";
+import CardIcon from "components/Card/CardIcon.js";
+import CardBody from "components/Card/CardBody.js";
+import CardFooter from "components/Card/CardFooter.js";
+import { makeStyles } from "@material-ui/core/styles";
+
 // @material-ui/icons
 import Store from "@material-ui/icons/Store";
 import Warning from "@material-ui/icons/Warning";
@@ -31,7 +36,8 @@ import ChartData from "variables/charts.js";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import axios from 'axios';
 import { setInterval } from "timers";
-import WeatherAPI from "components/WeatherAPI/WeatherAPI.js"
+
+
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -45,27 +51,48 @@ export default class Dashboard extends Component {
         for (let i = 0; i < this.user.devices.length; i++) {
             console.log("adding " + i)
             devices.push({
-               DeviceId: this.user.devices[i],
-               moist: 0,
-               temp: 0,
-               heatIndex: 0,
-               humidity: 0,
-               other: 0
+                DeviceId: this.user.devices[i],
+                moist: 0,
+                temp: 0,
+                heatIndex: 0,
+                humidity: 0,
+                other: 0
             })
         }
+
         this.state = {
             device: devices
         }
 
         this.interval = null;
-       
-     
+        console.log(this.weather);
+
 
 
     }
 
+    ticker2 = () => {
+        axios.get("/api/liveweather/32792").then((result, err) => {
+
+            if (err) {
+                console.log(err);
+            }
+            if (this.state.device && this.state.device.length > 0) {
+
+                //  let temp_device = this.state.device[0];
+                //  console.log(temp_device);
+                //  let data = result[0];
+                //  console.log(data);
+
+            }
+
+        });
+
+    }
+
+
     ticker = () => {
-        
+
         if (this.user.devices) {
 
             let numberOfDevices = this.user.devices.length
@@ -74,11 +101,12 @@ export default class Dashboard extends Component {
                 let did = this.user.devices[i]
                 let url = `/api/livedata/${did}`
                 axios.get(url).then(result => {
-                  
-                                   
-                    //{id: 1, timeStamp: "2019-09-01 04:37:52", moisture: 0, light: 0, sensorTempFehr: 27, …}
-                        this.setGauges(result.data[0], did)
 
+                    console.log(result.data[0])
+                    if (result.data[0]) {
+                        //{id: 1, timeStamp: "2019-09-01 04:37:52", moisture: 0, light: 0, sensorTempFehr: 27, …}
+                        this.setGauges(result.data[0], did)
+                    }
                 }).catch(error => {
                     throw error
                 })
@@ -92,13 +120,16 @@ export default class Dashboard extends Component {
     }
 
     componentDidMount() {
-        this.interval =  setInterval(this.ticker, 1000);
+        this.ticker2();
+        this.interval = setInterval(this.ticker, 1000);
+        this.interval2 = setInterval(this.ticker2, 10000);
     }
 
     setGauges = (data, id) => {
+
         console.log("set guages");
         console.log(data)
-        let moist = (parseFloat(data.moisture) / 100) ;
+        let moist = (parseFloat(data.moisture) / 100);
         let temp = parseInt(((parseFloat(data.sensorTempFehr) * (9 / 5)) + 32));
         let heatIndex = parseFloat(data.heatIndex) / 100
         let humidity = parseFloat(data.humidity)
@@ -120,8 +151,9 @@ export default class Dashboard extends Component {
         }
         tempState.push(stateItem);
         console.log(tempState);
-        this.setState({ device: tempState})
+        this.setState({ device: tempState })
 
+        return false;
     }
     componentWillUnmount() {
 
@@ -135,79 +167,90 @@ export default class Dashboard extends Component {
         let hexColor = "#0000FF"
         if (currentVal > 0) {
             let mColor = ((1677200 / currentVal) * 100);
-             hexColor = "#" + mColor.toString(16);
+            hexColor = "#" + mColor.toString(16);
         }
         return (
             <div>
-                <GridContainer>
-                    <GridItem xs={12} sm={6} md={4}>
-                       
-                        <DeviceDataGauge
-                            classes={classes}
-                            name="Moisture"
-                            icon={<Cloud />}
-                            color="liteblue"
-                            gColor={hexColor}
-                            value={this.state.device[0].moist}
-                            max={100}
-                            min={0}
-                            customUnit={null}
-                            isCustom={false}
-                            isPercent={true}
-                            isDegree={false}
-                            isTemp={false}
-                            isNumber={false}
-                            
-                        />
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={4}>
-                        <DeviceDataGauge
-                           
-                            classes={classes}
-                            name="Humidity"
-                            icon={(<Icon>brightness_low</Icon>)}
-                            color="yellow"
-                            gColor="#ffee00"
-                            value={this.state.device[0].humidity}
-                            max={100}
-                            min={0}
-                            customUnit={""}
-                            isCustom={false}
-                            isPercent={true}
-                            isDegree={false}
-                            isTemp={false}
-                            isNumber={false}
-                            on={true}
-                        />
-                    </GridItem>
-                    <GridItem xs={12} sm={6} md={4}>
-                        <DeviceDataGauge
-                           
-                            classes={classes}
-                            name="Temp"
-                            icon={(<Icon>ac_unit</Icon>)}
-                            color="blue"
-                            on={true}
-                            value={this.state.device[0].temp}
-                            max={110}
-                            min={-20}
-                            types={"temp"}
-                            customUnit={null}
-                            isCustom={false}
-                            isPercent={false}
-                            isDegree={false}
-                            isTemp={true}
-                            isNumber={false}
-                            
-                        />
-                    </GridItem>
-                   
-                </GridContainer>
+                <Card style={{ backgroundColor: "rgb(51, 51, 51)" }}>
+                    <CardHeader>
+                        <CardIcon color={"#0000dd"}>
+
+                            <h2 style={{ color: "white" }}> <Icon>{"devices"}</Icon> Device {this.user.devices[0].toString()}</h2>
+                        </CardIcon>
+                    </CardHeader>
+                    <CardBody>
+                        <GridContainer>
+
+                            <GridItem xs={12} sm={6} md={4}>
+
+                                <DeviceDataGauge
+                                    classes={classes}
+                                    name="Moisture"
+                                    icon={<Cloud />}
+                                    color="liteblue"
+                                    gColor={hexColor}
+                                    value={parseInt(100 - this.state.device[0].moist)}
+                                    max={100}
+                                    min={0}
+                                    customUnit={null}
+                                    isCustom={false}
+                                    isPercent={true}
+                                    isDegree={false}
+                                    isTemp={false}
+                                    isNumber={false}
+
+                                />
+                            </GridItem>
+                            <GridItem xs={12} sm={6} md={4}>
+                                <DeviceDataGauge
+
+                                    classes={classes}
+                                    name="Humidity"
+                                    icon={(<Icon>brightness_low</Icon>)}
+                                    color="yellow"
+                                    gColor="#ffee00"
+                                    value={this.state.device[0].humidity}
+                                    max={100}
+                                    min={0}
+                                    customUnit={""}
+                                    isCustom={false}
+                                    isPercent={true}
+                                    isDegree={false}
+                                    isTemp={false}
+                                    isNumber={false}
+                                    on={true}
+                                />
+                            </GridItem>
+                            <GridItem xs={12} sm={6} md={4}>
+                                <DeviceDataGauge
+
+                                    classes={classes}
+                                    name="Temp"
+                                    icon={(<Icon>ac_unit</Icon>)}
+                                    color="blue"
+                                    on={true}
+                                    value={this.state.device[0].temp}
+                                    max={110}
+                                    min={-20}
+                                    types={"temp"}
+                                    customUnit={null}
+                                    isCustom={false}
+                                    isPercent={false}
+                                    isDegree={false}
+                                    isTemp={true}
+                                    isNumber={false}
+
+                                />
+                            </GridItem>
+
+                        </GridContainer>
+                    </CardBody>
+                </Card>
                 <GridContainer>
                     <GridItem xs={12} sm={12} md={12}>
                         <DeviceDataChart
                             name="History Analytics"
-                            style={{ backgroundColor: "lightblue"}}
+                            style={{ backgroundColor: "lightblue" }}
                             data={ChartData.ChartDataRainOverTime.data}
                             type="Line"
                             options={ChartData.ChartDataRainOverTime.options}
@@ -218,12 +261,12 @@ export default class Dashboard extends Component {
                             message=" Rain Over TIme"
                         />
                     </GridItem>
-                   
+
                 </GridContainer>
             </div>
         )
     }
 
-  
-  
+
+
 }

@@ -21,55 +21,55 @@ import Support from "views/Support/Support.js";
 
 
 const dashboardRoutes = [
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "dashboard",
-    component: DashboardPage,
-    layout: "/admin"
-  },
-  {
-    path: "/user",
-    name: "User Profile",
-    icon: "person",
-    component: UserProfile,
-    layout: "/admin"
-  },
-  {
-    path: "/history",
-    name: "History",
-    icon: "bar_chart",
-    component: History,
-    layout: "/admin"
-  },
-  {
-    path: "/plants",
-    name: "Plants",
-    icon: "local_florist",
-    component: PlantSetup,
-    layout: "/admin"
-  },
-  {
-    path: "/devices",
-    name: "Devices",
-    icon: "settings_remote",
-    component: Devices,
-    layout: "/admin"
-  },
-  {
-    path: "/maps",
-    name: "Geographic Data",
-    icon: "terrain",
-    component: Maps,
-    layout: "/admin"
-  },
-  {
-    path: "/support",
-    name: "Support",
-    icon: "question_answer",
-    component: Support,
-    layout: "/admin"
-  }
+    {
+        path: "/dashboard",
+        name: "Dashboard",
+        icon: "dashboard",
+        component: DashboardPage,
+        layout: "/admin"
+    },
+    {
+        path: "/user",
+        name: "User Profile",
+        icon: "person",
+        component: UserProfile,
+        layout: "/admin"
+    },
+    {
+        path: "/history",
+        name: "History",
+        icon: "bar_chart",
+        component: History,
+        layout: "/admin"
+    },
+    {
+        path: "/plants",
+        name: "Plants",
+        icon: "local_florist",
+        component: PlantSetup,
+        layout: "/admin"
+    },
+    {
+        path: "/devices",
+        name: "Devices",
+        icon: "settings_remote",
+        component: Devices,
+        layout: "/admin"
+    },
+    {
+        path: "/maps",
+        name: "Geographic Data",
+        icon: "terrain",
+        component: Maps,
+        layout: "/admin"
+    },
+    {
+        path: "/support",
+        name: "Support",
+        icon: "question_answer",
+        component: Support,
+        layout: "/admin"
+    }
 
 
 ];
